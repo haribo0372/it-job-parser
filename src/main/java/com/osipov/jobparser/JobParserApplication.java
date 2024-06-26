@@ -21,9 +21,7 @@ public class JobParserApplication {
 		SpringApplication.run(JobParserApplication.class, args);
 
 		HHParser parser = new HHParser();
-		for ( String s : parser.parse("https://hh.ru/search/vacancy?text=Программист")){
-			System.out.println(s);
-		}
+		parser.parse("https://hh.ru/search/vacancy?text=Программист");
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.osipov.jobparser.parsers;
 
+import com.osipov.jobparser.models.Vacancy;
 import lombok.Data;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,7 +15,7 @@ public abstract class Parser {
 //    @Value("${web.userAgent}")
     private String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 YaBrowser/23.11.0.0 Safari/537.36";
 
-    public abstract List<String> parse(String url) throws IOException;
+    public abstract List<Vacancy> parse(String url) throws IOException;
 
     protected Document getHtmlCode(String url) throws IOException {
         return Jsoup.connect(url).userAgent(userAgent).get();

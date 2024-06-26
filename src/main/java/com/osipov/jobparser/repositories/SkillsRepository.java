@@ -1,7 +1,12 @@
 package com.osipov.jobparser.repositories;
 
-import com.osipov.jobparser.models.Skills;
+import com.osipov.jobparser.models.Skill;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface SkillsRepository extends JpaRepository<Skills, Long> {
+import java.util.List;
+
+@Repository
+public interface SkillsRepository extends JpaRepository<Skill, Long> {
+    List<Skill> findByName(String name);
 }
