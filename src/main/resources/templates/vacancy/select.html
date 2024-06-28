@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/select.css}" rel="stylesheet" />
+    <title>Title</title>
+</head>
+<body>
+<script th:src="@{/js/select.js}"></script>
+
+<form th:method="POST" th:action="@{/search/job}" th:object="${vacancyForm}">
+    <div><label for="city">Город:</label></div>
+    <select th:field="*{city}" id="city" name="city">
+        <div th:each="city: ${cities}">
+            <option th:value="${city.getId()}" th:text="${city.getName()}"></option>
+        </div>
+    </select><br><br>
+    <div><label for="profession">Специальность:</label></div>
+    <select th:field="*{profession}" id="profession" name="profession">
+        <div th:each="profession: ${professions}">
+            <option th:value="${profession.getId()}" th:text="${profession.getName()}"></option>
+        </div>
+    </select><br><br>
+    <div><label for="selectSkill">Навыки:</label></div>
+    <select th:field="*{skills}" id="selectSkill" name="selectSkill" multiple size="20">
+        <option th:each="skill : ${skills}"
+                th:value="${skill.getId()}"
+                th:text="${skill.getName()}">
+        </option>
+    </select>
+
+    <br><br><button type="submit" id="submit">Поиск</button>
+</form>
+
+</body>
+</html>

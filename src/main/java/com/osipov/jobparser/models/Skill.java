@@ -3,6 +3,7 @@ package com.osipov.jobparser.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,8 +18,19 @@ public class Skill {
     @Column(name = "name")
     public String name;
 
-    @ManyToMany(mappedBy = "vacancies")
+    @ManyToMany(mappedBy = "skills")
     private Set<Vacancy> vacancies;
+
+    public Skill(String name) {
+        this.name = name;
+    }
+
+    public Skill() {
+    }
+
+    public void addVacancy(Vacancy vacancy){
+        vacancies.add(vacancy);
+    }
 
     @Override
     public boolean equals(Object object) {
@@ -31,5 +43,12 @@ public class Skill {
     @Override
     public int hashCode() {
         return Objects.hashCode(name);
+    }
+
+    @Override
+    public String toString() {
+        return "Skill{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }

@@ -7,9 +7,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Entity(name = "profession")
+@Entity(name = "city")
 @Data
-public class Profession {
+public class City {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -18,12 +18,19 @@ public class Profession {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "profession")
-    private Set<Vacancy> vacancies = new HashSet<>();
+    @OneToMany(mappedBy = "city")
+    private Set<Vacancy> vacancies;
+
+    public City() {
+    }
+
+    public City(String name) {
+        this.name = name;
+    }
 
     @Override
     public String toString() {
-        return "Profession{" +
+        return "City{" +
                 "name='" + name + '\'' +
                 '}';
     }
@@ -32,8 +39,8 @@ public class Profession {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        Profession that = (Profession) object;
-        return Objects.equals(name, that.name);
+        City city = (City) object;
+        return Objects.equals(name, city.name);
     }
 
     @Override

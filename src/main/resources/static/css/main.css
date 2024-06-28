@@ -1,0 +1,23 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+.text-box {
+    background-color: #e0e0e0; /* Серый цвет фона */
+    padding: 20px;             /* Отступы внутри блока */
+    border: 1px solid #ccc;    /* Граница блока */
+    border-radius: 5px;        /* Скругленные углы */
+    margin: 20px 0;            /* Отступы сверху и снизу блока */
+    color: #333;               /* Цвет текста */
+}
+
+button {
+    color: #333;
+}

@@ -1,6 +1,9 @@
 package com.osipov.jobparser;
 
-import com.osipov.jobparser.parsers.HHParser;
+import com.osipov.jobparser.managers.ParseManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -8,10 +11,13 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.io.IOException;
 
 @SpringBootApplication
-public class JobParserApplication {
+public class JobParserApplication implements CommandLineRunner {
+	@Autowired
+	private ParseManager parseManager;
 
 	public static void main(String[] args) throws IOException {
 		Dotenv dotenv = Dotenv.configure().load();
+		System.setProperty("USER_AGENT", dotenv.get("USER_AGENT"));
 		System.setProperty("DB_HOST", dotenv.get("DB_HOST"));
 		System.setProperty("DB_PORT", dotenv.get("DB_PORT"));
 		System.setProperty("DB_NAME", dotenv.get("DB_NAME"));
@@ -19,9 +25,17 @@ public class JobParserApplication {
 		System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
 
 		SpringApplication.run(JobParserApplication.class, args);
-
-		HHParser parser = new HHParser();
-		parser.parse("https://hh.ru/search/vacancy?text=Программист");
 	}
 
+	@Override
+	public void run(String... args) throws Exception {
+		for (String arg : args) {
+			if (arg.startsWith("--fill_db=")) {
+				String fill_db = arg.substring("--fill_db=".length()).toLowerCase();
+				if (fill_db.equals("true")){
+					parseManager.createDB();
+				}
+			}
+		}
+	}
 }
