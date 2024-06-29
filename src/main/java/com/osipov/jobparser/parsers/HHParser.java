@@ -15,10 +15,13 @@ import java.util.*;
 @Component
 public class HHParser extends Parser {
 
+    public HHParser() {
+        super.address = "https://hh.ru/search/vacancy?text=%s";
+    }
+
     @Override
     public List<Vacancy> parse(Profession profession) throws IOException {
-        String url = String.format("https://hh.ru/search/vacancy?text=%s",
-                profession.getName().replaceAll("\\s+", "+"));
+        String url = String.format(address, profession.getName().replaceAll("\\s+", "+"));
 
         Document document = getHtmlCode(url);
         Elements elements = document.select("div.vacancy-search-item__card.serp-item_link.vacancy-card-container--OwxCdOj5QlSlCBZvSggS");
@@ -48,9 +51,13 @@ public class HHParser extends Parser {
                     .select("a[data-qa=vacancy-serp__vacancy-employer].bloko-link.bloko-link_kind-secondary")
                     .select("span.company-info-text--vgvZouLtf8jwBmaD1xgp"));
 
-            String title = checkElement(currentVacancy.select("div.vacancy-title > h1"));
+            String title = currentVacancy
+                    .select("div.vacancy-title").select("h1").text();
 
-            Elements skillsFromPage = currentVacancy.select("ul.vacancy-skill-list--COfJZoDl6Y8AwbMFAh5Z > li");
+            if (title.isEmpty()) title = profession.getName();
+
+            Elements skillsFromPage = currentVacancy
+                    .select("ul.vacancy-skill-list--COfJZoDl6Y8AwbMFAh5Z > li");
 
             for (Element pageSkill : skillsFromPage) {
                 String skillName = pageSkill.text();
@@ -61,10 +68,11 @@ public class HHParser extends Parser {
             City city = new City(checkElement(element
                     .select("div.narrow-container--lKMghVwoLUtnGdJIrpW4")
                     .select("span[data-qa=vacancy-serp__vacancy-address_narrow].bloko-text")
-                    .select("span.fake-magritte-primary-text--Hdw8FvkOzzOcoR4xXWni")).split("\\s+")[0]
+                    .select("span.fake-magritte-primary-text--Hdw8FvkOzzOcoR4xXWni")).strip().split("\\s+")[0]
             );
 
-            if (!validateParameters(url, individualUrl, city.getName(), company, title)) continue;
+            if (!validateParameters(url, individualUrl, city.getName(), company)) continue;
+
 
             vacancy.setUrl(individualUrl);
             vacancy.setCity(city);
@@ -73,15 +81,7 @@ public class HHParser extends Parser {
             vacancy.setProfession(profession);
             vacancy.setTitle(title);
 
-            System.out.println(
-                    "url=" + individualUrl +
-                            ", wage=" + wage +
-                            ", city=" + city +
-                            ", company=" + company +
-                            ", title=" + title +
-                            ", prof=" + profession +
-                            ", skills=" + vacancy.getSkills());
-
+            System.out.println(vacancy);
             vacancies.add(vacancy);
         }
         return vacancies;

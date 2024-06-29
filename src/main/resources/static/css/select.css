@@ -35,3 +35,60 @@ input[type="submit"] {
   border-radius: 3px;
   cursor: pointer;
 }
+
+.vacancy-box {
+    background-color: #e0e0e0;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 20px 0;
+    color: #333;
+}
+
+.vacancy-title {
+    text-decoration: none;
+    color: #006b2b;
+}
+
+.vacancy-default_param {
+    font-size: 16px;
+    color: black;
+    white-space: nowrap;
+}
+
+.vacancy-company{
+    font-size: 16px;
+    color: black;
+}
+
+.vacancy-prof{
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.skill {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.vacancy-wage {
+    font-size: 16px;
+}
+
+.box-container {
+    white-space: nowrap; /* Запрещаем перенос строк внутри контейнера */
+    overflow-x: auto; /* Добавляем горизонтальную прокрутку, если блоки не помещаются */
+}
+
+/* Стили для блоков */
+.box {
+    display: inline-block; /* Используем inline-block для блоков */
+    background-color: #a8a8a8; /* Фоновый цвет блока */
+    border: 1px solid #ccc; /* Граница блока */
+    padding: 10px; /* Внутренний отступ для увеличения размера блока */
+    margin-right: 10px; /* Отступ между блоками */
+    text-align: center; /* Центрирование текста */
+    font-size: 14px; /* Размер шрифта */
+    color: #333; /* Цвет текста */
+    white-space: nowrap; /* Запрещаем перенос текста внутри блоков */
+}

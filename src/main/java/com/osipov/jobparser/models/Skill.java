@@ -28,7 +28,7 @@ public class Skill {
     public Skill() {
     }
 
-    public void addVacancy(Vacancy vacancy){
+    public void addVacancy(Vacancy vacancy) {
         vacancies.add(vacancy);
     }
 

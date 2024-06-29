@@ -3,8 +3,8 @@ package com.osipov.jobparser.managers;
 import com.osipov.jobparser.models.Profession;
 import com.osipov.jobparser.models.Vacancy;
 import com.osipov.jobparser.parsers.HHParser;
+import com.osipov.jobparser.parsers.HabrCareerParser;
 import com.osipov.jobparser.repositories.ProfessionRepository;
-import com.osipov.jobparser.repositories.SkillRepository;
 import com.osipov.jobparser.services.VacancyService;
 import org.hibernate.NonUniqueResultException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,41 +17,45 @@ import java.util.List;
 @Component("parseManager")
 public class ParseManager {
     private final HHParser hhParser;
+    private final HabrCareerParser habrCareerParser;
     private final ProfessionRepository professionRepository;
     private final VacancyService vacancyService;
 
     @Autowired
-    public ParseManager(HHParser hhParser, ProfessionRepository professionRepository, VacancyService vacancyService) {
+    public ParseManager(HHParser hhParser, HabrCareerParser habrCareerParser, ProfessionRepository professionRepository, VacancyService vacancyService) {
         this.hhParser = hhParser;
+        this.habrCareerParser = habrCareerParser;
         this.professionRepository = professionRepository;
         this.vacancyService = vacancyService;
 
-//        if (vacancyService.getAll().size() < 10) {
-//            List<Profession> allProfession = this.professionRepository.findAll();
-//            for (Profession profession : allProfession) {
-//                try {
-//                    List<Vacancy> vacancies = this.hhParser.parse(profession);
-//                    for (Vacancy vacancy : vacancies) {
-//                        this.vacancyService.save(vacancy);
-//                    }
-//                } catch (IOException ignored) {
-//                } catch (NonUniqueResultException | IncorrectResultSizeDataAccessException uniqueResultException) {
-//                    System.out.println(uniqueResultException.getMessage());
-//                }
-//            }
-//        }
+        if (vacancyService.getVacancies().size() < 10) {
+            List<Profession> allProfession = this.professionRepository.findAll();
+            for (Profession profession : allProfession) {
+                try {
+                    List<Vacancy> vacancies = this.hhParser.parse(profession);
+                    vacancies.addAll(this.habrCareerParser.parse(profession));
+                    for (Vacancy vacancy : vacancies) {
+                        this.vacancyService.save(vacancy);
+                    }
+                } catch (IOException ignored) {
+                } catch (NonUniqueResultException | IncorrectResultSizeDataAccessException uniqueResultException) {
+                    System.out.println(uniqueResultException.getMessage());
+                }
+            }
+        }
     }
 
-    public void createDB(){
+    public void fillVacancy() {
         List<Profession> allProfession = this.professionRepository.findAll();
         for (Profession profession : allProfession) {
             try {
                 List<Vacancy> vacancies = this.hhParser.parse(profession);
-                for (Vacancy vacancy : vacancies){
+                vacancies.addAll(this.habrCareerParser.parse(profession));
+                for (Vacancy vacancy : vacancies) {
                     this.vacancyService.save(vacancy);
                 }
-            } catch (IOException ignored){ }
-            catch (NonUniqueResultException | IncorrectResultSizeDataAccessException uniqueResultException){
+            } catch (IOException ignored) {
+            } catch (NonUniqueResultException | IncorrectResultSizeDataAccessException uniqueResultException) {
                 System.out.println(uniqueResultException.getMessage());
             }
         }

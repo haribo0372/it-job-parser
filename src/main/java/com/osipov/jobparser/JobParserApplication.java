@@ -1,8 +1,9 @@
 package com.osipov.jobparser;
 
 import com.osipov.jobparser.managers.ParseManager;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,6 +26,13 @@ public class JobParserApplication implements CommandLineRunner {
 		System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
 
 		SpringApplication.run(JobParserApplication.class, args);
+//		String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 YaBrowser/23.11.0.0 Safari/537.36";
+//		String url = "https://hh.ru/vacancy/101334696?query=Системный+инженер&hhtmFrom=vacancy_search_list";
+//		Document document = Jsoup.connect(url).userAgent(userAgent).get();
+//
+//		String res = document.select("div.vacancy-title").select("h1").text();
+//
+//		System.out.println(res);
 	}
 
 	@Override
@@ -33,7 +41,7 @@ public class JobParserApplication implements CommandLineRunner {
 			if (arg.startsWith("--fill_db=")) {
 				String fill_db = arg.substring("--fill_db=".length()).toLowerCase();
 				if (fill_db.equals("true")){
-					parseManager.createDB();
+					parseManager.fillVacancy();
 				}
 			}
 		}

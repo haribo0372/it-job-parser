@@ -1,6 +1,5 @@
 package com.osipov.jobparser.controllers;
 
-import com.osipov.jobparser.models.City;
 import com.osipov.jobparser.models.Vacancy;
 import com.osipov.jobparser.repositories.CityRepository;
 import com.osipov.jobparser.repositories.ProfessionRepository;
@@ -15,12 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/search/job")
+@RequestMapping("/search")
 public class JobController {
     private VacancyService vacancyService;
     private ProfessionRepository professionRepository;
     private SkillRepository skillRepository;
     private CityRepository cityRepository;
+
 
     @Autowired
     public JobController(VacancyService vacancyService, ProfessionRepository professionRepository,
@@ -33,17 +33,25 @@ public class JobController {
 
     @GetMapping
     public String getMain(Model model){
-        model.addAttribute("cities", cityRepository.findAll());
-        model.addAttribute("professions", professionRepository.findAll());
-        model.addAttribute("skills", skillRepository.findAll());
-        model.addAttribute("vacancyForm", vacancyService.createVacancy());
+        fillModelFor(model);
+        if (!model.containsAttribute("result"))
+            model.addAttribute("results", vacancyService.getVacancies(10));
+
         return "vacancy/select";
     }
 
     @PostMapping
-    public String postMain(@ModelAttribute("vacancyForm")Vacancy vacancy){
-        System.out.println(vacancy);
-        return "redirect:/search/job";
+    public String postMain(@ModelAttribute("vacancyForm") Vacancy vacancy, Model model){
+        fillModelFor(model);
+        model.addAttribute("results", vacancyService.findVacanciesByParams(vacancy));
+
+        return "vacancy/select";
     }
 
+    private void fillModelFor(Model model){
+        model.addAttribute("cities", cityRepository.findAll());
+        model.addAttribute("professions", professionRepository.findAll());
+        model.addAttribute("skills", skillRepository.findAll());
+        model.addAttribute("vacancyForm", vacancyService.createVacancy());
+    }
 }

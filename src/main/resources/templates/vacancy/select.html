@@ -8,19 +8,21 @@
 <body>
 <script th:src="@{/js/select.js}"></script>
 
-<form th:method="POST" th:action="@{/search/job}" th:object="${vacancyForm}">
+<form th:method="POST" th:action="@{/search}" th:object="${vacancyForm}">
     <div><label for="city">Город:</label></div>
     <select th:field="*{city}" id="city" name="city">
+        <option th:value="${null}"></option>
         <div th:each="city: ${cities}">
             <option th:value="${city.getId()}" th:text="${city.getName()}"></option>
         </div>
     </select><br><br>
     <div><label for="profession">Специальность:</label></div>
     <select th:field="*{profession}" id="profession" name="profession">
+        <option th:value="${null}"></option>
         <div th:each="profession: ${professions}">
             <option th:value="${profession.getId()}" th:text="${profession.getName()}"></option>
         </div>
-    </select><br><br>
+    </select>
     <div><label for="selectSkill">Навыки:</label></div>
     <select th:field="*{skills}" id="selectSkill" name="selectSkill" multiple size="20">
         <option th:each="skill : ${skills}"
@@ -31,6 +33,22 @@
 
     <br><br><button type="submit" id="submit">Поиск</button>
 </form>
+<div th:each="vacancy : ${results}">
+    <div class="vacancy-box">
+        <a class="vacancy-title" th:href="${vacancy.getUrl()}">
+            <h1 th:text="${vacancy.getTitle()}"></h1>
+        </a>
+<!--        <a class="vacancy-prof" th:text="${vacancy.getProfession().getName()}"></a><br><br>-->
+        <a class="vacancy-company" th:text="${vacancy.getCompany() + ', ' + vacancy.getCity().getName()}"></a><br><br>
+        <p class="vacancy-wage" th:text="${vacancy.getWage()}"></p>
+        <p class="skill">Навыки:</p>
+        <div class="box-container">
+            <div class="box" th:each="skill : ${vacancy.getSkills()}" >
+                <a class="vacancy-default_param" th:text="${skill.getName()}"></a>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

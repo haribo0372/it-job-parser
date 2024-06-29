@@ -1,7 +1,6 @@
 package com.osipov.jobparser.services;
 
 import com.osipov.jobparser.models.City;
-import com.osipov.jobparser.models.Profession;
 import com.osipov.jobparser.models.Skill;
 import com.osipov.jobparser.models.Vacancy;
 import com.osipov.jobparser.repositories.CityRepository;
@@ -10,20 +9,18 @@ import com.osipov.jobparser.repositories.SkillRepository;
 import com.osipov.jobparser.repositories.VacancyRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import lombok.Getter;
+import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class VacancyService {
+    @PersistenceContext
+    private EntityManager entityManager;
+
     private final VacancyRepository vacancyRepository;
     private final ProfessionRepository professionRepository;
     private final CityRepository cityRepository;
@@ -39,8 +36,20 @@ public class VacancyService {
         this.skillRepository = skillRepository;
     }
 
-    public List<Vacancy> getAll() {
+    public List<Vacancy> getVacancies() {
         return vacancyRepository.findAll();
+    }
+
+    public List<Vacancy> getVacancies(Integer max){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Vacancy> cq = cb.createQuery(Vacancy.class);
+        Root<Vacancy> root = cq.from(Vacancy.class);
+        cq.select(root);
+
+        jakarta.persistence.TypedQuery<Vacancy> query = entityManager.createQuery(cq);
+        query.setMaxResults(10);
+
+        return query.getResultList();
     }
 
     @Transactional
@@ -59,12 +68,9 @@ public class VacancyService {
                 managedSkills.add(vacancySkill);
             }
         }
+
         vacancy.setSkills(managedSkills);
         vacancyRepository.save(vacancy);
-    }
-
-    public void save(List<Vacancy> vacancies) {
-        vacancies.forEach(this::save);
     }
 
     public void delete(Vacancy vacancy) {
@@ -75,33 +81,38 @@ public class VacancyService {
         return new Vacancy();
     }
 
-    public List<Vacancy> vacancyFiltering(Vacancy vacancy){
+    public List<Vacancy> vacancyFiltering(Vacancy vacancy) {
 
         return List.of();
     }
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    public List<Vacancy> findVacanciesByCriteria(Vacancy vacancy) {
+    public List<Vacancy> findVacanciesByParams(Vacancy vacancy) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Vacancy> query = cb.createQuery(Vacancy.class);
         Root<Vacancy> root = query.from(Vacancy.class);
+        Join<Vacancy, Skill> skillsJoin = root.join("skills", JoinType.LEFT);
 
         List<Predicate> predicates = new ArrayList<>();
 
         if (vacancy.getCity() != null && !vacancy.getCity().getName().isEmpty()) {
-            predicates.add(cb.equal(root.get("city_id"), vacancy.getId()));
+            predicates.add(cb.equal(root.get("city"), vacancy.getCity()));
         }
-        if (vacancy.getCompany() != null && !vacancy.getCompany().isEmpty()) {
-            predicates.add(cb.equal(root.get("company"), vacancy.getCompany()));
+        if (vacancy.getProfession() != null && !vacancy.getProfession().getName().isEmpty()) {
+            predicates.add(cb.equal(root.get("profession"), vacancy.getProfession()));
         }
-        if (vacancy.getTitle() != null && !vacancy.getTitle().isEmpty()) {
-            predicates.add(cb.equal(root.get("title"), vacancy.getTitle()));
+
+        Set<Skill> currentSkills = vacancy.getSkills();
+        if (currentSkills != null && !currentSkills.isEmpty()) {
+            List<Predicate> skillPredicates = new ArrayList<>();
+            for (Skill skill : currentSkills) {
+                skillPredicates.add(cb.isMember(skill, root.get("skills")));
+            }
+            predicates.add(cb.and(skillPredicates.toArray(new Predicate[0])));
         }
 
         query.where(predicates.toArray(new Predicate[0]));
 
         return entityManager.createQuery(query).getResultList();
+
     }
 }

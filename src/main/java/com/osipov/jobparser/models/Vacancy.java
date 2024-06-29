@@ -59,11 +59,11 @@ public class Vacancy {
     @Override
     public String toString() {
         return "Vacancy{" +
-                "city=" + city +
+                "url='" + url + '\'' +
                 ", company='" + company + '\'' +
                 ", profession=" + profession +
                 ", title='" + title + '\'' +
-                ", url='" + url + '\'' +
+                ", city='" + city + '\'' +
                 ", skills=" + skills +
                 '}';
     }
