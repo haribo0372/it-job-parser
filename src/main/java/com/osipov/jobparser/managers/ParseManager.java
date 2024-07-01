@@ -1,10 +1,8 @@
 package com.osipov.jobparser.managers;
 
 import com.osipov.jobparser.models.Profession;
-import com.osipov.jobparser.models.Vacancy;
 import com.osipov.jobparser.parsers.HHParser;
 import com.osipov.jobparser.parsers.HabrCareerParser;
-import com.osipov.jobparser.parsers.Parser;
 import com.osipov.jobparser.repositories.ProfessionRepository;
 import com.osipov.jobparser.services.VacancyService;
 import org.hibernate.NonUniqueResultException;
