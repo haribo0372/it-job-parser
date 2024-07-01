@@ -1,8 +1,6 @@
 package com.osipov.jobparser;
 
 import com.osipov.jobparser.managers.ParseManager;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
