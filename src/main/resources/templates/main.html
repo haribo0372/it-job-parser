@@ -2,10 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link th:href="@{/css/main.css}" rel="stylesheet" />
     <title>GoJob</title>
 </head>
 <body>
@@ -23,8 +20,15 @@
 </div>
 
 <div class="text-box">
-    <a>Чтобы найти работу своей мечты, нажмите на кнопку ниже</a><br><br>
-    <a th:href="@{/search/job}"><button>Найти работу</button></a>
+    <a>Чтобы найти работу своей мечты, нажмите на      </a>
+    <a th:href="@{/search}"><button>Найти работу</button></a>
+</div>
+
+<div class="text-box">
+    <a>Если вы хотите регулярно использовать наш сайт, то рекомендуем зарегистрироваться</a><br><br>
+    <a th:href="@{/registration}"><button>Регистрация</button></a><br><br><br>
+    <a>Если вы уже имеете аккаунт, то милости просим :)</a><br><br>
+    <a th:href="@{/login}"><button>Войти</button></a>
 </div>
 </body>
 </html>

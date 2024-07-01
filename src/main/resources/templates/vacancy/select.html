@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link th:href="@{/css/select.css}" rel="stylesheet" />
-    <title>Title</title>
+    <title>Search</title>
 </head>
 <body>
 <script th:src="@{/js/select.js}"></script>
@@ -38,7 +38,6 @@
         <a class="vacancy-title" th:href="${vacancy.getUrl()}">
             <h1 th:text="${vacancy.getTitle()}"></h1>
         </a>
-<!--        <a class="vacancy-prof" th:text="${vacancy.getProfession().getName()}"></a><br><br>-->
         <a class="vacancy-company" th:text="${vacancy.getCompany() + ', ' + vacancy.getCity().getName()}"></a><br><br>
         <p class="vacancy-wage" th:text="${vacancy.getWage()}"></p>
         <p class="skill">Навыки:</p>

@@ -22,7 +22,7 @@ public class Vacancy {
     @Column(name = "company")
     private String company;
 
-    @Column(name="wage")
+    @Column(name = "wage")
     private String wage;
 
     @ManyToOne

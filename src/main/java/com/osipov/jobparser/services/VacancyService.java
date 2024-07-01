@@ -40,14 +40,14 @@ public class VacancyService {
         return vacancyRepository.findAll();
     }
 
-    public List<Vacancy> getVacancies(Integer max){
+    public List<Vacancy> getVacancies(Integer max) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Vacancy> cq = cb.createQuery(Vacancy.class);
         Root<Vacancy> root = cq.from(Vacancy.class);
         cq.select(root);
 
         jakarta.persistence.TypedQuery<Vacancy> query = entityManager.createQuery(cq);
-        query.setMaxResults(10);
+        query.setMaxResults(max);
 
         return query.getResultList();
     }
@@ -72,8 +72,9 @@ public class VacancyService {
         vacancy.setSkills(managedSkills);
         vacancyRepository.save(vacancy);
     }
+
     @Transactional
-    public void save(Collection<Vacancy> vacancies){
+    public void save(Collection<Vacancy> vacancies) {
         vacancies.forEach(this::save);
     }
 

@@ -24,9 +24,9 @@ public abstract class Parser {
         return Jsoup.connect(url).userAgent(userAgent).get();
     }
 
-    protected boolean validateParameters(String... parameters){
-        for (String s : parameters){
-            if (s == null){
+    protected boolean validateParameters(String... parameters) {
+        for (String s : parameters) {
+            if (s == null) {
                 messageAboutFail(parameters);
                 return false;
             }
@@ -37,7 +37,8 @@ public abstract class Parser {
         }
         return true;
     }
-    private void messageAboutFail(String... parameters){
+
+    private void messageAboutFail(String... parameters) {
         System.out.println("Не удалось добавить : \n\t" + Arrays.toString(parameters));
     }
 }

@@ -32,23 +32,23 @@ public class JobController {
     }
 
     @GetMapping
-    public String getMain(Model model){
-        fillModelFor(model);
+    public String getMain(Model model) {
+        fillModelParams(model);
         if (!model.containsAttribute("result"))
-            model.addAttribute("results", vacancyService.getVacancies(10));
+            model.addAttribute("results", vacancyService.getVacancies(30));
 
         return "vacancy/select";
     }
 
     @PostMapping
-    public String postMain(@ModelAttribute("vacancyForm") Vacancy vacancy, Model model){
-        fillModelFor(model);
+    public String postMain(@ModelAttribute("vacancyForm") Vacancy vacancy, Model model) {
+        fillModelParams(model);
         model.addAttribute("results", vacancyService.findVacanciesByParams(vacancy));
 
         return "vacancy/select";
     }
 
-    private void fillModelFor(Model model){
+    private void fillModelParams(Model model) {
         model.addAttribute("cities", cityRepository.findAll());
         model.addAttribute("professions", professionRepository.findAll());
         model.addAttribute("skills", skillRepository.findAll());
