@@ -3,30 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <link th:href="@{/css/select.css}" rel="stylesheet" />
+    <link th:href="@{/css/main.css}" rel="stylesheet" />
     <title>Registration</title>
 </head>
 <body>
-<form th:method="POST" th:action="@{/registration}" th:object="${userForm}">
-    <div>
-        <label for="username">Логин: </label>
-        <input class="reg-input" id="username" th:field="*{username}"/>
-        <p class="error-text" th:each="error: ${#fields.errors('username')}"
-           th:text="${error}">Validation error</p>
-        <p class="error-text" th:if="${usernameError}" th:text="${usernameError}"></p>
-    </div><br>
-    <div>
-        <label for="password">Пароль: </label>
-        <input class="reg-input" type="password" th:field="*{password}" id="password"/>
-        <p class="error-text" th:each="error : ${#fields.errors('password')}"
-           th:text="${error}">Validation error</p>
-    </div><br>
-    <div>
-        <label for="passwordConfirm">Повторите пароль: </label>
-        <input class="reg-input" id="passwordConfirm" type="password" th:field="*{passwordConfirm}"/>
-    </div>
-    <p class="error-text" th:if="${passwordError}" th:text="${passwordError}"></p><br>
+<div class="navbar">
+    <a th:href="@{/}" class="nav-button">GoJob</a>
+    <a th:href="@{/search}" class="nav-button">Найти работу</a>
+    <a th:href="@{/login}" class="nav-button">Войти</a>
+</div>
+<div class="content">
+    <form th:method="POST" th:action="@{/registration}" th:object="${userForm}">
+        <div>
+            <label for="username">Логин: </label>
+            <input class="reg-input" id="username" th:field="*{username}"/>
+            <p class="error-text" th:each="error: ${#fields.errors('username')}"
+               th:text="${error}">Validation error</p>
+            <p class="error-text" th:if="${usernameError}" th:text="${usernameError}"></p>
+        </div><br>
+        <div>
+            <label for="password">Пароль: </label>
+            <input class="reg-input" type="password" th:field="*{password}" id="password"/>
+            <p class="error-text" th:each="error : ${#fields.errors('password')}"
+               th:text="${error}">Validation error</p>
+        </div><br>
+        <div>
+            <label for="passwordConfirm">Повторите пароль: </label>
+            <input class="reg-input" id="passwordConfirm" type="password" th:field="*{passwordConfirm}"/>
+        </div>
+        <p class="error-text" th:if="${passwordError}" th:text="${passwordError}"></p><br>
 
-    <button type="submit">Подтвердить</button>
-</form>
+        <button type="submit">Подтвердить</button>
+    </form>
+</div>
+
 </body>
 </html>

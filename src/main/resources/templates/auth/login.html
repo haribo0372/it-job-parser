@@ -2,30 +2,36 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <link th:href="@{/css/login.css}" rel="stylesheet" />
+    <link th:href="@{/css/main.css}" rel="stylesheet" />
     <title>Вход</title>
 </head>
 <body>
-<div class="error-text" th:if="${param.error}">
-    Invalid login or password.
+<div class="navbar">
+    <a th:href="@{/}" class="nav-button">GoJob</a>
+    <a th:href="@{/search}" class="nav-button">Найти работу</a>
+    <a th:href="@{/registration}" class="nav-button">Зарегистрироваться</a>
+
 </div>
+<div class="content">
+    <div class="error-text" th:if="${param.error}">
+        Invalid login or password.
+    </div>
 
-<div class="error-text" th:if="${param.logout}">
-    You have been logged out.
+    <div class="error-text" th:if="${param.logout}">
+        You have been logged out.
+    </div>
+
+    <form method="POST" th:action="@{/login}">
+        <div>
+            <label for="username">Логин: </label>
+            <input class="reg-input" type="text" id="username" name="username"/>
+        </div><br>
+        <div>
+            <label for="password">Пароль: </label>
+            <input class="reg-input" type="password" id="password" name="password"/>
+        </div><br><br>
+        <button type="submit">Войти</button><br><br>
+    </form>
 </div>
-
-<form method="POST" th:action="@{/login}">
-    <div>
-        <label for="username">Логин: </label>
-        <input class="reg-input" type="text" id="username" name="username"/>
-    </div><br>
-    <div>
-        <label for="password">Пароль: </label>
-        <input class="reg-input" type="password" id="password" name="password"/>
-    </div><br><br>
-    <button type="submit">Войти</button><br><br>
-
-    <a href="/registration" style="font-weight: bold;">Регистрация</a></a>
-
-</form>
 </body>
 </html>
