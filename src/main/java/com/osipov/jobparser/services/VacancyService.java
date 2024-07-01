@@ -72,6 +72,10 @@ public class VacancyService {
         vacancy.setSkills(managedSkills);
         vacancyRepository.save(vacancy);
     }
+    @Transactional
+    public void save(Collection<Vacancy> vacancies){
+        vacancies.forEach(this::save);
+    }
 
     public void delete(Vacancy vacancy) {
         vacancyRepository.delete(vacancy);

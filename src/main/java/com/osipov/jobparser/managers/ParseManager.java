@@ -4,6 +4,7 @@ import com.osipov.jobparser.models.Profession;
 import com.osipov.jobparser.models.Vacancy;
 import com.osipov.jobparser.parsers.HHParser;
 import com.osipov.jobparser.parsers.HabrCareerParser;
+import com.osipov.jobparser.parsers.Parser;
 import com.osipov.jobparser.repositories.ProfessionRepository;
 import com.osipov.jobparser.services.VacancyService;
 import org.hibernate.NonUniqueResultException;
@@ -27,33 +28,14 @@ public class ParseManager {
         this.habrCareerParser = habrCareerParser;
         this.professionRepository = professionRepository;
         this.vacancyService = vacancyService;
-
-        if (vacancyService.getVacancies().size() < 10) {
-            List<Profession> allProfession = this.professionRepository.findAll();
-            for (Profession profession : allProfession) {
-                try {
-                    List<Vacancy> vacancies = this.hhParser.parse(profession);
-                    vacancies.addAll(this.habrCareerParser.parse(profession));
-                    for (Vacancy vacancy : vacancies) {
-                        this.vacancyService.save(vacancy);
-                    }
-                } catch (IOException ignored) {
-                } catch (NonUniqueResultException | IncorrectResultSizeDataAccessException uniqueResultException) {
-                    System.out.println(uniqueResultException.getMessage());
-                }
-            }
-        }
     }
 
     public void fillVacancy() {
         List<Profession> allProfession = this.professionRepository.findAll();
         for (Profession profession : allProfession) {
             try {
-                List<Vacancy> vacancies = this.hhParser.parse(profession);
-                vacancies.addAll(this.habrCareerParser.parse(profession));
-                for (Vacancy vacancy : vacancies) {
-                    this.vacancyService.save(vacancy);
-                }
+                this.vacancyService.save(this.hhParser.parse(profession));
+                this.vacancyService.save(habrCareerParser.parse(profession));
             } catch (IOException ignored) {
             } catch (NonUniqueResultException | IncorrectResultSizeDataAccessException uniqueResultException) {
                 System.out.println(uniqueResultException.getMessage());

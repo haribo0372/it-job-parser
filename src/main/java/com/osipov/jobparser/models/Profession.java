@@ -21,6 +21,13 @@ public class Profession {
     @OneToMany(mappedBy = "profession")
     private Set<Vacancy> vacancies = new HashSet<>();
 
+    public Profession(String name) {
+        this.name = name;
+    }
+
+    public Profession() {
+    }
+
     @Override
     public String toString() {
         return "Profession{" +

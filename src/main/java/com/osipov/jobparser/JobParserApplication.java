@@ -26,13 +26,6 @@ public class JobParserApplication implements CommandLineRunner {
 		System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
 
 		SpringApplication.run(JobParserApplication.class, args);
-//		String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 YaBrowser/23.11.0.0 Safari/537.36";
-//		String url = "https://hh.ru/vacancy/101334696?query=Системный+инженер&hhtmFrom=vacancy_search_list";
-//		Document document = Jsoup.connect(url).userAgent(userAgent).get();
-//
-//		String res = document.select("div.vacancy-title").select("h1").text();
-//
-//		System.out.println(res);
 	}
 
 	@Override
