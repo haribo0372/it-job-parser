@@ -38,8 +38,8 @@ IT Job Parser - это веб-приложение на базе Spring Boot, к
 1. Склонируйте репозиторий:
 
     ```bash
-    git clone https://github.com/haribo0372/jobs_parser.git
-    cd jobs_parser
+    git clone https://github.com/haribo0372/it-job-parser.git
+    cd it-job-parser
     ```
 
 2. Создайте файл `.env` в корне проекта и добавьте следующие переменные окружения:
