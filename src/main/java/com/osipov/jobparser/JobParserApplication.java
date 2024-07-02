@@ -6,10 +6,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.IOException;
 
 @SpringBootApplication
+@EnableScheduling
 public class JobParserApplication implements CommandLineRunner {
     @Autowired
     private ParseManager parseManager;

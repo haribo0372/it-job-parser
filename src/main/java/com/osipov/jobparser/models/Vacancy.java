@@ -64,6 +64,7 @@ public class Vacancy {
                 ", profession=" + profession +
                 ", title='" + title + '\'' +
                 ", city='" + city + '\'' +
+                ", wage='" + wage + '\'' +
                 ", skills=" + skills +
                 '}';
     }

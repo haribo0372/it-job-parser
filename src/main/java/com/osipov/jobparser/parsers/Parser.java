@@ -20,7 +20,7 @@ public abstract class Parser {
 
     public abstract List<Vacancy> parse(Profession profession) throws IOException;
 
-    protected Document getHtmlCode(String url) throws IOException {
+    public Document getHtmlCode(String url) throws IOException {
         return Jsoup.connect(url).userAgent(userAgent).get();
     }
 

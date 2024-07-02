@@ -1,19 +1,23 @@
 package com.osipov.jobparser.managers;
 
 import com.osipov.jobparser.models.Profession;
+import com.osipov.jobparser.models.Vacancy;
 import com.osipov.jobparser.parsers.HHParser;
 import com.osipov.jobparser.parsers.HabrCareerParser;
 import com.osipov.jobparser.repositories.ProfessionRepository;
 import com.osipov.jobparser.services.VacancyService;
 import org.hibernate.NonUniqueResultException;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
 
-@Component("parseManager")
+@Service
 public class ParseManager {
     private final HHParser hhParser;
     private final HabrCareerParser habrCareerParser;
@@ -32,6 +36,7 @@ public class ParseManager {
         List<Profession> allProfession = this.professionRepository.findAll();
         for (Profession profession : allProfession) {
             try {
+                this.hhParser.parse(profession);
                 this.vacancyService.save(this.hhParser.parse(profession));
                 this.vacancyService.save(habrCareerParser.parse(profession));
             } catch (IOException ignored) {
@@ -39,5 +44,22 @@ public class ParseManager {
                 System.out.println(uniqueResultException.getMessage());
             }
         }
+    }
+    @Scheduled(fixedRate = 10800000)
+    public void checkLinkValidity(){
+        for (Vacancy vacancy : vacancyService.getVacancies()){
+            try {
+                Document doc = habrCareerParser.getHtmlCode(vacancy.getUrl());
+
+                if (!doc.select("p.vacancy-archive-description").isEmpty() ||
+                        doc.select("div.no-content__title").text().equals("Вакансия в архиве")){
+                    vacancyService.delete(vacancy);
+                }
+            } catch (IOException e){
+                vacancyService.delete(vacancy);
+            }
+        }
+
+        if (vacancyService.count() < 300) fillVacancy();
     }
 }

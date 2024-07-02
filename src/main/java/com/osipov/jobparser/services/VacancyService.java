@@ -79,16 +79,16 @@ public class VacancyService {
     }
 
     public void delete(Vacancy vacancy) {
-        vacancyRepository.delete(vacancy);
+        if (vacancy.getId() == null) return;
+        vacancyRepository.deleteById(vacancy.getId());
+    }
+
+    public long count(){
+        return vacancyRepository.count();
     }
 
     public Vacancy createVacancy() {
         return new Vacancy();
-    }
-
-    public List<Vacancy> vacancyFiltering(Vacancy vacancy) {
-
-        return List.of();
     }
 
     public List<Vacancy> findVacanciesByParams(Vacancy vacancy) {
@@ -118,6 +118,5 @@ public class VacancyService {
         query.where(predicates.toArray(new Predicate[0]));
 
         return entityManager.createQuery(query).getResultList();
-
     }
 }

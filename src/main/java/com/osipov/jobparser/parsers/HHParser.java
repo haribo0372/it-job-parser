@@ -34,21 +34,20 @@ public class HHParser extends Parser {
 
             if (individualUrl.length() > 255) continue;
 
-            Document currentVacancy = getHtmlCode(individualUrl);
+            Document currentVacancy;
+            try {
+                currentVacancy = getHtmlCode(individualUrl);
+            } catch (IOException e){
+                continue;
+            }
+
             Vacancy vacancy = new Vacancy();
             String wage = checkElement(element
-                    .select("div.wide-container--lnYNwDTY2HXOzvtbTaHf")
-                    .select("div.compensation-labels--uUto71l5gcnhU2I8TZmz")
-                    .select("span.bloko-text")
                     .select("span" +
                             ".fake-magritte-primary-text--Hdw8FvkOzzOcoR4xXWni" +
                             ".compensation-text--kTJ0_rp54B2vNeZ3CTt2" +
                             ".separate-line-on-xs--mtby5gO4J0ixtqzW38wh"));
             String company = checkElement(element
-                    .select("div.info-section--N695JG77kqwzxWAnSePt")
-                    .select("span.separate-line-on-xs--mtby5gO4J0ixtqzW38wh")
-                    .select("span.bloko-text")
-                    .select("a[data-qa=vacancy-serp__vacancy-employer].bloko-link.bloko-link_kind-secondary")
                     .select("span.company-info-text--vgvZouLtf8jwBmaD1xgp"));
 
             String title = currentVacancy
@@ -66,7 +65,6 @@ public class HHParser extends Parser {
             }
 
             City city = new City(checkElement(element
-                    .select("div.narrow-container--lKMghVwoLUtnGdJIrpW4")
                     .select("span[data-qa=vacancy-serp__vacancy-address_narrow].bloko-text")
                     .select("span.fake-magritte-primary-text--Hdw8FvkOzzOcoR4xXWni")).strip().split("\\s+")[0]
             );
