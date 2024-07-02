@@ -64,6 +64,8 @@ IT Job Parser - это веб-приложение на базе Spring Boot, к
 
 ### Сборка и запуск приложения
 
+#### Запуск с использованием docker
+
 1. Соберите проект с помощью Maven:
 
     ```bash
@@ -73,10 +75,19 @@ IT Job Parser - это веб-приложение на базе Spring Boot, к
 2. Запустите Docker-контейнеры:
 
     ```bash
-    docker-compose up -d
+    docker-compose up --build
     ```
+   * **Примечание**: если вы хотите запускать spring приложение внутри контейнера без парсинга вакансий, то измените 7 строку Dockerfile на 
+         ```
+     CMD ["java", "-jar", "/jobParser.jar"] ```
+#### Запуск без использования docker
+1. Соберите проект с помощью Maven:
 
-3. Запустите Spring Boot приложение:
+    ```bash
+    mvn clean package
+    ```
+   
+2. Запустите Spring Boot приложение:
 
     ```bash
     java -jar target/jobparser-0.0.1-SNAPSHOT.jar
@@ -85,6 +96,7 @@ IT Job Parser - это веб-приложение на базе Spring Boot, к
     ```bash
     java -jar target/jobparser-0.0.1-SNAPSHOT.jar --fill_db=true
     ```
+   
 ### Использование
 
 - Откройте браузер и перейдите по адресу [http://localhost:8080](http://localhost:8080).
