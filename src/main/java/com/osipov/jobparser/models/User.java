@@ -32,7 +32,12 @@ public class User implements UserDetails {
     @NotEmpty(message = "Повторите пароль")
     private String passwordConfirm;
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "user_vacancy",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "vacancy_id")
+    )
     private Set<Vacancy> vacancies = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)

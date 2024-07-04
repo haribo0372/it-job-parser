@@ -6,7 +6,6 @@ import com.osipov.jobparser.services.VacancyService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -37,7 +36,7 @@ public class AccountController {
     @GetMapping("/remove/{vacancyId}")
     public String removeFromFavorite(@AuthenticationPrincipal User currentUser,
                                      @PathVariable("vacancyId") Long vacancyId, RedirectAttributes redirectAttributes) {
-        boolean added = vacancyService.removeFavoriteVacancyFromUser(currentUser, vacancyId);
+        boolean added = userService.removeFavoriteVacancyFromUser(currentUser, vacancyId);
 
         return "redirect:/account";
     }

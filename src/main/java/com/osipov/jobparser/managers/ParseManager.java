@@ -11,7 +11,6 @@ import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -36,8 +35,7 @@ public class ParseManager {
         List<Profession> allProfession = this.professionRepository.findAll();
         for (Profession profession : allProfession) {
             try {
-                this.hhParser.parse(profession);
-                this.vacancyService.save(this.hhParser.parse(profession));
+                this.vacancyService.save(hhParser.parse(profession));
                 this.vacancyService.save(habrCareerParser.parse(profession));
             } catch (IOException ignored) {
             } catch (NonUniqueResultException | IncorrectResultSizeDataAccessException uniqueResultException) {
@@ -45,17 +43,18 @@ public class ParseManager {
             }
         }
     }
+
     @Scheduled(fixedRate = 10800000)
-    public void checkLinkValidity(){
-        for (Vacancy vacancy : vacancyService.getVacancies()){
+    public void checkLinkValidity() {
+        for (Vacancy vacancy : vacancyService.getVacancies()) {
             try {
                 Document doc = habrCareerParser.getHtmlCode(vacancy.getUrl());
 
                 if (!doc.select("p.vacancy-archive-description").isEmpty() ||
-                        doc.select("div.no-content__title").text().equals("Вакансия в архиве")){
+                        doc.select("div.no-content__title").text().equals("Вакансия в архиве")) {
                     vacancyService.delete(vacancy);
                 }
-            } catch (IOException e){
+            } catch (IOException e) {
                 vacancyService.delete(vacancy);
             }
         }

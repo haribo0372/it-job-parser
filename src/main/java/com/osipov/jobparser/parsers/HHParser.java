@@ -37,7 +37,7 @@ public class HHParser extends Parser {
             Document currentVacancy;
             try {
                 currentVacancy = getHtmlCode(individualUrl);
-            } catch (IOException e){
+            } catch (IOException e) {
                 continue;
             }
 

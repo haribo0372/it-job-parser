@@ -5,7 +5,6 @@ import com.osipov.jobparser.models.User;
 import com.osipov.jobparser.models.Vacancy;
 import com.osipov.jobparser.repositories.RoleRepository;
 import com.osipov.jobparser.repositories.UserRepository;
-import com.osipov.jobparser.repositories.VacancyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -73,12 +72,7 @@ public class UserService implements UserDetailsService {
 
     public void deleteUser(Long userId) {
         Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.getVacancies().clear();
-            userRepository.save(user);
-            userRepository.delete(user);
-        }
+        userOptional.ifPresent(userRepository::delete);
     }
 
     public void createAdminUser(String username, String password) {
@@ -100,6 +94,56 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    @Transactional
+    public boolean addFavoriteVacancyToUser(User user, Long vacancyId) {
+        Optional<Vacancy> optionalVacancy = vacancyService.findById(vacancyId);
+        if (optionalVacancy.isPresent()) {
+            Vacancy vacancy = optionalVacancy.get();
+            Set<Vacancy> vacanciesOfUser = findVacanciesOfUser(user);
+            if (!vacanciesOfUser.contains(vacancy)) {
+                vacanciesOfUser.add(vacancy);
+                try {
+                    userRepository.save(user);
+                    System.out.println("Vacancy_id=" + vacancyId + " added to User_id=" + user.getId());
+                } catch (Exception e) {
+                    System.err.printf("VacancyService::addFavoriteVacancyToUser(%s, %s) -> \n" +
+                            "\tError saving user_vacancy : %s : %s%n", user.getId(), vacancyId, e.getMessage(), e);
+                    return false;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    @Transactional
+    public boolean removeFavoriteVacancyFromUser(User user, Long vacancyId) {
+        Optional<Vacancy> optionalVacancy = vacancyService.findById(vacancyId);
+        if (optionalVacancy.isPresent()) {
+            Vacancy vacancy = optionalVacancy.get();
+            Set<Vacancy> vacanciesOfUser = findVacanciesOfUser(user);
+            if (vacanciesOfUser.contains(vacancy)) {
+                vacanciesOfUser.remove(vacancy);
+                try {
+                    userRepository.save(user);
+                    System.out.println("Vacancy_id=" + vacancyId + " remove from to User_id=" + user.getId());
+                } catch (Exception e) {
+                    System.err.printf("VacancyService::removeFavoriteVacancyFromUser(%s, %s) -> \n" +
+                            "\tError saving user_vacancy : %s : %s%n", user.getId(), vacancyId, e.getMessage(), e);
+                    return false;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     public static User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -116,6 +160,15 @@ public class UserService implements UserDetailsService {
 
         initUser.getVacancies().size();
         return initUser.getVacancies();
+    }
+
+    public boolean vacancyExistsInFavoritesOfUser(Vacancy vacancy) {
+        User user = getCurrentUser();
+        if (user == null) throw new RuntimeException("The user is not logged in to the current session");
+
+        Set<Vacancy> vacancies = findVacanciesOfUser(user);
+        return vacancies.contains(vacancy);
+
     }
 
     public static boolean isUserAuthenticated() {

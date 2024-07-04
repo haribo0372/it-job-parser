@@ -43,12 +43,7 @@ public class Vacancy {
     )
     private Set<Skill> skills = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "vacancy_user",
-            joinColumns = @JoinColumn(name = "vacancy_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    @ManyToMany(mappedBy = "vacancies")
     private Set<User> users = new HashSet<>();
 
     public void addSkill(Skill skill) {

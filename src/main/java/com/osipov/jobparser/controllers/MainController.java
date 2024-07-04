@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class MainController {
     @GetMapping
-    public String getMainPage(Model model){
+    public String getMainPage(Model model) {
         model.addAttribute("isAuthenticated", UserService.isUserAuthenticated());
         return "main";
     }

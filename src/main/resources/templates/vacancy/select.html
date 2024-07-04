@@ -96,13 +96,13 @@
                 </div>
             </div><br>
             <div th:if="${isAuthenticated}">
-                <button class="add-to-favorites" th:if="${!vacancyService.vacancyExistsInFavoritesOfUser(vacancy)}"
+                <button class="add-to-favorites" th:if="${!userService.vacancyExistsInFavoritesOfUser(vacancy)}"
                         th:data-vacancy-id="${vacancy.getId()}"
                         onclick="addToFavorites(this)">
                     Добавить в избранное
                 </button>
 
-                <button class="remove-from-favorites" th:if="${vacancyService.vacancyExistsInFavoritesOfUser(vacancy)}"
+                <button class="remove-from-favorites" th:if="${userService.vacancyExistsInFavoritesOfUser(vacancy)}"
                         th:data-vacancy-id="${vacancy.getId()}"
                         onclick="removeFromFavorites(this)">
                     Удалить из избранного

@@ -12,16 +12,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RestController
 @RequestMapping("/favorite")
 public class FavoriteController {
-//    @Autowired
-//    private UserService userService;
-
     @Autowired
-    private VacancyService vacancyService;
+    private UserService userService;
 
     @GetMapping("/add/{vacancyId}")
     public ResponseEntity<String> addToFavorites(@AuthenticationPrincipal User currentUser,
                                                  @PathVariable("vacancyId") Long vacancyId, RedirectAttributes redirectAttributes) {
-        boolean added = vacancyService.addFavoriteVacancyToUser(currentUser, vacancyId);
+        boolean added = userService.addFavoriteVacancyToUser(currentUser, vacancyId);
         if (added) {
             return ResponseEntity.ok("Vacancy added to favorites");
         } else {
@@ -34,7 +31,7 @@ public class FavoriteController {
     @GetMapping("/remove/{vacancyId}")
     public ResponseEntity<String> removeFromFavorite(@AuthenticationPrincipal User currentUser,
                                                      @PathVariable("vacancyId") Long vacancyId, RedirectAttributes redirectAttributes) {
-        boolean added = vacancyService.removeFavoriteVacancyFromUser(currentUser, vacancyId);
+        boolean added = userService.removeFavoriteVacancyFromUser(currentUser, vacancyId);
         if (added) {
             return ResponseEntity.ok("Vacancy removed from favorites");
         } else {

@@ -1,5 +1,6 @@
 package com.osipov.jobparser.controllers;
 
+import com.osipov.jobparser.managers.ParseManager;
 import com.osipov.jobparser.models.Profession;
 import com.osipov.jobparser.repositories.ProfessionRepository;
 import com.osipov.jobparser.services.UserService;
@@ -15,11 +16,13 @@ import java.util.Optional;
 public class AdminController {
     private final UserService userService;
     private final ProfessionRepository professionRepository;
+    private final ParseManager parseManager;
 
     @Autowired
-    public AdminController(UserService userService, ProfessionRepository professionRepository) {
+    public AdminController(UserService userService, ProfessionRepository professionRepository, ParseManager parseManager) {
         this.userService = userService;
         this.professionRepository = professionRepository;
+        this.parseManager = parseManager;
     }
 
     @GetMapping
@@ -29,7 +32,7 @@ public class AdminController {
 
     // User
     @GetMapping("/user")
-    public String userPage(Model model){
+    public String userPage(Model model) {
         model.addAttribute("allUsers", userService.allUsers());
         return "admin/user";
     }
@@ -42,14 +45,14 @@ public class AdminController {
 
     // Profession
     @GetMapping("/profession")
-    public String professionPage(Model model){
+    public String professionPage(Model model) {
         model.addAttribute("allProfessions", professionRepository.findAll());
         model.addAttribute("professionForm", new Profession());
         return "admin/profession";
     }
 
     @PostMapping("/profession/insert")
-    public String insertProfession(@ModelAttribute("professionForm") Profession profession){
+    public String insertProfession(@ModelAttribute("professionForm") Profession profession) {
         if (profession.getName() == null || profession.getName().isEmpty())
             return "redirect:/admin/profession";
 
@@ -66,8 +69,14 @@ public class AdminController {
 
     // Vacancy
     @GetMapping("/vacancy")
-    public String vacancyPage(Model model){
+    public String vacancyPage(Model model) {
         return "admin/vacancy";
+    }
+
+    @GetMapping("/vacancy/fill/db")
+    public String fillDBWithVacancies(){
+        parseManager.fillVacancy();
+        return "redirect:/admin/vacancy";
     }
 
 }
