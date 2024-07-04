@@ -2,26 +2,35 @@ package com.osipov.jobparser.services;
 
 import com.osipov.jobparser.models.Role;
 import com.osipov.jobparser.models.User;
+import com.osipov.jobparser.models.Vacancy;
 import com.osipov.jobparser.repositories.RoleRepository;
 import com.osipov.jobparser.repositories.UserRepository;
+import com.osipov.jobparser.repositories.VacancyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private VacancyService vacancyService;
+
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -62,16 +71,57 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username) != null;
     }
 
-    public boolean deleteUser(Long userId) {
-        if (userRepository.findById(userId).isPresent()) {
-            userRepository.deleteById(userId);
-            return true;
+    public void deleteUser(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.getVacancies().clear();
+            userRepository.save(user);
+            userRepository.delete(user);
         }
-        return false;
     }
 
-    public List<User> usergtList(Long idMin) {
-        return userRepository.findAll();
+    public void createAdminUser(String username, String password) {
+        if (userRepository.findByUsername(username) == null) {
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(passwordEncoder.encode(password));
+            user.setPasswordConfirm(passwordEncoder.encode(password));
+
+            Role adminRole = roleRepository.findByName("ROLE_ADMIN");
+            if (adminRole == null) {
+                adminRole = new Role();
+                adminRole.setName("ROLE_ADMIN");
+                roleRepository.save(adminRole);
+            }
+
+            user.setRoles(Collections.singleton(adminRole));
+            userRepository.save(user);
+        }
+    }
+
+    public static User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+
+        return (User) authentication.getPrincipal();
+    }
+
+    @Transactional
+    public Set<Vacancy> findVacanciesOfUser(User user) {
+        User initUser = userRepository.findById(user.getId()).orElseThrow(() ->
+                new RuntimeException("UserService::findVacanciesOfUser() -> User not found"));
+
+        initUser.getVacancies().size();
+        return initUser.getVacancies();
+    }
+
+    public static boolean isUserAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && authentication.isAuthenticated() &&
+                !(authentication instanceof AnonymousAuthenticationToken);
     }
 
     public PasswordEncoder getPasswordEncoder() {

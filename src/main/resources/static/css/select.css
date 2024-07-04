@@ -9,6 +9,30 @@ form {
   border-radius: 5px;
 }
 
+.add-to-favorites {
+    display: block;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+.remove-from-favorites {
+    display: block;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #a12d2d;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
 .error-text {
     color : #ff0303;
 }

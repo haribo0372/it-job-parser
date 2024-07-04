@@ -32,7 +32,13 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 ).formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/search"));
+                        .defaultSuccessUrl("/search"))
+                .logout(logout ->
+                        logout
+                                .logoutUrl("/account/logout")
+                                .logoutSuccessUrl("/login?logout")
+                                .permitAll()
+                );
 
         return http.build();
     }

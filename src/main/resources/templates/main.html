@@ -9,7 +9,8 @@
 <div class="navbar">
     <a class="nav-button">GoJob</a>
     <a th:href="@{/search}" class="nav-button">Найти работу</a>
-    <a th:href="@{/login}" class="nav-button">Войти</a>
+    <a th:href="@{/login}" th:if=${!isAuthenticated} class="nav-button">Войти</a>
+    <a th:href="@{/account}" th:if=${isAuthenticated} class="nav-button">Аккаунт</a>
 </div>
 
 <div class="content">

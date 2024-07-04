@@ -35,13 +35,21 @@ public class Vacancy {
     @Column(name = "url")
     private String url;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "vacancy_skill",
             joinColumns = {@JoinColumn(name = "vacancy_id")},
             inverseJoinColumns = {@JoinColumn(name = "skill_id")}
     )
     private Set<Skill> skills = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "vacancy_user",
+            joinColumns = @JoinColumn(name = "vacancy_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> users = new HashSet<>();
 
     public void addSkill(Skill skill) {
         skills.add(skill);
@@ -59,26 +67,26 @@ public class Vacancy {
     @Override
     public String toString() {
         return "Vacancy{" +
-                "url='" + url + '\'' +
+                "id=" + id +
+                ", city=" + city +
                 ", company='" + company + '\'' +
+                ", wage='" + wage + '\'' +
                 ", profession=" + profession +
                 ", title='" + title + '\'' +
-                ", city='" + city + '\'' +
-                ", wage='" + wage + '\'' +
-                ", skills=" + skills +
+                ", url='" + url + '\'' +
                 '}';
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        Vacancy vacancy = (Vacancy) object;
-        return Objects.equals(url, vacancy.url);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vacancy vacancy = (Vacancy) o;
+        return Objects.equals(id, vacancy.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(url);
+        return Objects.hash(id);
     }
 }

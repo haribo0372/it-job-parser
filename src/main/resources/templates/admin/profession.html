@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/main.css}" rel="stylesheet"/>
+    <link th:href="@{/css/admin.css}" rel="stylesheet"/>
+
+    <title>Professions</title>
+</head>
+<body>
+<div class="navbar">
+    <a th:href="@{/admin/user}" class="nav-button">Users</a>
+    <a th:href="@{/admin/vacancy}" class="nav-button">Vacancy</a>
+</div>
+<div class="content">
+    <table>
+        <caption>
+            All professions
+        </caption>
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">professionName</th>
+        </tr>
+        </thead>
+        <tbody>
+        <div th:each="profession: ${allProfessions}">
+            <tr>
+                <th scope="row" th:text="${profession.getId()}"></th>
+                <td><a th:text="${profession.getName()}"></a></td>
+                <td>
+                    <a th:href="@{/admin/profession/delete/{id}(id=${profession.getId()})}">
+                        <button>DELETE</button>
+                    </a>
+                </td>
+            </tr>
+        </div>
+        </tbody>
+    </table>
+    <div class="container">
+        <form th:method="POST" th:action="@{profession/insert}" th:object="${professionForm}">
+            <label for="nameProf">Специализация :</label>
+            <input id="nameProf" th:field="*{name}">
+            <button type="submit">Добавить</button>
+        </form>
+    </div>
+    <a th:href="@{/}">Back to main page</a>
+</div>
+</body>
+</html>

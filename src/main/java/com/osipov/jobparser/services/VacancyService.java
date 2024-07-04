@@ -2,6 +2,7 @@ package com.osipov.jobparser.services;
 
 import com.osipov.jobparser.models.City;
 import com.osipov.jobparser.models.Skill;
+import com.osipov.jobparser.models.User;
 import com.osipov.jobparser.models.Vacancy;
 import com.osipov.jobparser.repositories.CityRepository;
 import com.osipov.jobparser.repositories.ProfessionRepository;
@@ -25,6 +26,7 @@ public class VacancyService {
     private final ProfessionRepository professionRepository;
     private final CityRepository cityRepository;
     private final SkillRepository skillRepository;
+//    private final UserService userService;
 
     @Autowired
     public VacancyService(VacancyRepository repository,
@@ -50,6 +52,68 @@ public class VacancyService {
         query.setMaxResults(max);
 
         return query.getResultList();
+    }
+
+    @Transactional
+    public boolean addFavoriteVacancyToUser(User user, Long vacancyId) {
+        Optional<Vacancy> optionalVacancy = vacancyRepository.findById(vacancyId);
+        System.out.println(vacancyId);
+        if (optionalVacancy.isPresent()) {
+            Vacancy vacancy = optionalVacancy.get();
+            Set<User> userSet = vacancy.getUsers();
+            if (!userSet.contains(user)) {
+                userSet.add(user);
+                try {
+                    vacancyRepository.save(vacancy);
+                    System.out.println("Vacancy_id=" + vacancyId + " added to User_id=" + user.getId());
+                } catch (Exception e) {
+                    System.err.println("VacancyService::addFavoriteVacancyToUser() -> " +
+                            "Error saving vacancy_user : " + e.getMessage() + " : " + e);
+                    return false;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    @Transactional
+    public boolean removeFavoriteVacancyFromUser(User user, Long vacancyId) {
+        Optional<Vacancy> optionalVacancy = vacancyRepository.findById(vacancyId);
+        System.out.println(vacancyId);
+        if (optionalVacancy.isPresent()) {
+            Vacancy vacancy = optionalVacancy.get();
+            Set<User> userSet = vacancy.getUsers();
+            if (userSet.contains(user)) {
+                try {
+                    userSet.remove(user);
+                    vacancyRepository.save(vacancy);
+                    System.out.println("Vacancy_id=" + vacancyId + " remove from User_id=" + user.getId());
+                } catch (Exception e) {
+                    System.err.println("VacancyService::addFavoriteVacancyToUser() -> " +
+                            "Error removing vacancy_user : " + e.getMessage() + " : " + e);
+                    return false;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public boolean vacancyExistsInFavoritesOfUser(Vacancy vacancy){
+        User user = UserService.getCurrentUser();
+        if (user == null) return false;
+        return vacancy.getUsers().contains(user);
+    }
+
+    public Optional<Vacancy> findById(Long id) {
+        return vacancyRepository.findById(id);
     }
 
     @Transactional
@@ -83,7 +147,7 @@ public class VacancyService {
         vacancyRepository.deleteById(vacancy.getId());
     }
 
-    public long count(){
+    public long count() {
         return vacancyRepository.count();
     }
 

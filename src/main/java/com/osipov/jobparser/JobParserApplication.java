@@ -1,8 +1,5 @@
 package com.osipov.jobparser;
 
-import com.osipov.jobparser.managers.ParseManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -12,9 +9,7 @@ import java.io.IOException;
 
 @SpringBootApplication
 @EnableScheduling
-public class JobParserApplication implements CommandLineRunner {
-    @Autowired
-    private ParseManager parseManager;
+public class JobParserApplication {
 
     public static void main(String[] args) throws IOException {
         Dotenv dotenv = Dotenv.configure().load();
@@ -26,17 +21,5 @@ public class JobParserApplication implements CommandLineRunner {
         System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
 
         SpringApplication.run(JobParserApplication.class, args);
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        for (String arg : args) {
-            if (arg.startsWith("--fill_db=")) {
-                String fill_db = arg.substring("--fill_db=".length()).toLowerCase();
-                if (fill_db.equals("true")) {
-                    parseManager.fillVacancy();
-                }
-            }
-        }
     }
 }
