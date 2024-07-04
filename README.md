@@ -10,6 +10,9 @@ IT Job Parser - это веб-приложение на базе Spring Boot, к
 - Отображение всех собранных вакансий в удобном формате
 - Возможности отфильтровать вакансии по требованиям пользователи
 - Автоматическая проверка актуальности ссылок на вакансии
+- Поддержка авторизации
+- Возможность авторизированному пользователю добавлять понравившиеся вакансии в избранное 
+- CRUD приложение для администраторов
 
 ## Технологии
 
@@ -51,6 +54,8 @@ IT Job Parser - это веб-приложение на базе Spring Boot, к
     DB_NAME=itjobparser
     DB_USERNAME=your_db_username
     DB_PASSWORD=your_db_password
+    ADMIN_LOGIN=your_admin_login
+    ADMIN_PASSWORD=your_admin_password
     ```
 
 3. Настройте `application.properties` для подключения к базе данных PostgreSQL:
@@ -111,6 +116,8 @@ IT Job Parser - это веб-приложение на базе Spring Boot, к
 ### Основные классы и компоненты
 
 - `JobParserApplication` - основной класс Spring Boot приложения
+- `DatabaseInitializer` - класс для предварительного заполнения базы данных
+- `ApplicationRunner` - класс для обработки параметров запуска
 - `HHParser` - класс для парсинга [hh.ru](https://hh.ru)
 - `HabrCareerParser` - класс для парсинга [career.habr.com](https://career.habr.com)
 - `ParseManager` - менеджер, который связывает результаты парсинга с БД
