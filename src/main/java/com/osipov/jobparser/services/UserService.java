@@ -81,13 +81,8 @@ public class UserService implements UserDetailsService {
             user.setUsername(username);
             user.setPassword(passwordEncoder.encode(password));
             user.setPasswordConfirm(passwordEncoder.encode(password));
-
+            user.setRoleName("ROLE_ADMIN");
             Role adminRole = roleRepository.findByName("ROLE_ADMIN");
-            if (adminRole == null) {
-                adminRole = new Role();
-                adminRole.setName("ROLE_ADMIN");
-                roleRepository.save(adminRole);
-            }
 
             user.setRoles(Collections.singleton(adminRole));
             userRepository.save(user);

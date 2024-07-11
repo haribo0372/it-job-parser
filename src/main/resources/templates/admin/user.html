@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link th:href="@{/css/main.css}" rel="stylesheet"/>
+    <link th:href="@{/css/admin.css}" rel="stylesheet"/>
     <title>Users</title>
 </head>
 <body>
@@ -11,15 +12,42 @@
     <a th:href="@{/admin/vacancy}" class="nav-button">Vacancy</a>
 </div>
 <div class="content">
-    <table>
+    <label for="searchInput">Поиск</label>
+    <input type="text" id="searchInput" onkeyup="filterProfessions()" placeholder="user.username">
+    <table id="table">
         <caption>
-            Authorized Users
+            <div class="container">
+                <form th:method="POST" th:action="@{/admin/user/insert}" th:object="${userForm}">
+                    <div class="form-group">
+                        <label for="username"><a>Логин:</a></label>
+                        <input class="reg-input" id="username" th:field="*{username}"/>
+                        <p class="error-text" th:each="error: ${#fields.errors('username')}"
+                           th:text="${error}">Validation error</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="password"><a>Пароль:</a></label>
+                        <input class="reg-input" id="password" th:field="*{password}"/>
+                        <p class="error-text" th:each="error : ${#fields.errors('password')}"
+                           th:text="${error}">Validation error</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="role"><a>Роль: </a></label>
+                        <select id="role" name="role" th:field="*{roleName}">
+                            <option th:value="${'ROLE_USER'}">Пользователь</option>
+                            <option th:value="${'ROLE_ADMIN'}">Администратор</option>
+                        </select>
+                        <p class="error-text" th:each="error : ${#fields.errors('roleName')}"
+                           th:text="${error}">Validation error</p>
+                    </div>
+                    <button type="submit">INSERT</button>
+                </form>
+            </div>
         </caption>
         <thead>
         <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Username</th>
-            <th scope="col">Delete</th>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>

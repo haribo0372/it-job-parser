@@ -1,6 +1,7 @@
 package com.osipov.jobparser.services;
 
 import com.osipov.jobparser.models.City;
+import com.osipov.jobparser.models.Profession;
 import com.osipov.jobparser.models.Skill;
 import com.osipov.jobparser.models.Vacancy;
 import com.osipov.jobparser.repositories.CityRepository;

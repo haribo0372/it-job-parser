@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <link th:href="@{/css/main.css}" rel="stylesheet" />
-    <title>Users</title>
+    <link th:href="@{/css/admin.css}" rel="stylesheet" />
+    <title>Vacancies</title>
 </head>
 <body>
 <div class="navbar">
@@ -15,6 +16,51 @@
     <a th:href="@{/admin/vacancy/fill/db}" style="text-decoration: none;">
         <button>Спарсить свежие вакансии</button>
     </a><br><br>
+
+    <label for="searchInput">Поиск</label>
+    <input type="text" id="searchInput" onkeyup="filterProfessions()" placeholder="profession.name">
+    <table id="table">
+        <caption>
+            <p>Vacancies</p>
+        </caption>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>City</th>
+            <th>Company</th>
+            <th>Wage</th>
+            <th>Profession</th>
+            <th>Title</th>
+            <th>Url</th>
+            <th>Skills</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <div th:each="vacancy: ${vacancies}">
+            <tr>
+                <th scope="row" th:text="${vacancy.getId()}"></th>
+                <td><a th:text="${vacancy.getCity().getName()}"></a></td>
+                <td><a th:text="${vacancy.getCompany()}"></a></td>
+                <td><a th:text="${vacancy.getWage()}"></a></td>
+                <td><a th:text="${vacancy.getProfession().getName()}"></a></td>
+                <td><a th:text="${vacancy.getTitle()}"></a></td>
+                <td><a th:href=${vacancy.getUrl()}>url</a></td>
+                <td>
+                    <div th:each="skill : ${vacancy.getSkills()}">
+                        <a th:text="${skill.getName()}">
+                    </div>
+                </td>
+                <td>
+                    <a th:href="@{/admin/profession/delete/{id}(id=${profession.getId()})}">
+                        <button>DELETE</button>
+                    </a>
+                </td>
+            </tr>
+        </div>
+        </tbody>
+    </table>
+
     <a th:href="@{/}">Back to main page</a>
 </div>
 </body>

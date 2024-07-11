@@ -1,8 +1,9 @@
 .container {
     display: flex;
-    justify-content: space-between; /* Располагает дочерние элементы справа */
+    justify-content: center; /* Центрирует форму по горизонтали */
+    align-items: center; /* Центрирует форму по вертикали */
     padding: 20px;
-    width: 100%
+    width: 100%;
 }
 
 form {
@@ -10,4 +11,96 @@ form {
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 100%; /* Обеспечивает, что форма занимает всю ширину контейнера */
+}
+
+#searchInput {
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 20px 12px 40px;
+    margin: 12px 0;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+#table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 18px;
+    text-align: left;
+}
+
+caption {
+    caption-side: top; /* Задает расположение заголовка таблицы сверху */
+    text-align: center; /* Центрирует текст */
+    margin-bottom: 10px; /* Добавляет отступ снизу */
+}
+
+#table th, #table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+#table th {
+    background-color: #f2f2f2;
+}
+#table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+#table tr:hover {
+    background-color: #f1f1f1;
+}
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+button:hover {
+    background-color: #45a049;
+}
+a {
+    text-decoration: none;
+    color: black;
+}
+a:hover {
+    color: #4CAF50;
+}
+
+.form-group {
+    display: flex;
+    align-items: center; /* Выравнивание по вертикали */
+    margin-bottom: 10px; /* Отступ снизу */
+}
+.form-group label {
+    margin-right: 10px; /* Отступ справа */
+}
+.reg-input, select {
+    padding: 5px; /* Отступы внутри элементов */
+    border-radius: 4px; /* Скругленные углы */
+    border: 1px solid #ccc; /* Цвет границы */
+    flex: 1; /* Занимает оставшееся пространство */
+}
+button {
+    padding: 10px 20px; /* Отступы внутри кнопки */
+    border-radius: 4px; /* Скругленные углы */
+    border: none; /* Убирает границу */
+    background-color: #4CAF50; /* Цвет фона */
+    color: white; /* Цвет текста */
+    cursor: pointer; /* Указатель курсора */
+    font-size: 16px; /* Размер шрифта */
+}
+button:hover {
+    background-color: #45a049; /* Цвет фона при наведении */
+}
+
+.error-text {
+    color : #ff0303;
 }

@@ -24,7 +24,6 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(@ModelAttribute("userForm") @Valid User user, BindingResult bindingResult, Model model) {
-
         if (bindingResult.hasErrors()) {
             return "auth/registration";
         }
@@ -40,6 +39,6 @@ public class RegistrationController {
             return "auth/registration";
         }
 
-        return "redirect:/";
+        return "redirect:/login";
     }
 }

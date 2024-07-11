@@ -32,6 +32,10 @@ public class User implements UserDetails {
     @NotEmpty(message = "Повторите пароль")
     private String passwordConfirm;
 
+    @Transient
+    @NotEmpty(message = "Введите роль")
+    private String roleName;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "user_vacancy",

@@ -1,6 +1,7 @@
 package com.osipov.jobparser.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 import java.util.HashSet;
@@ -16,9 +17,10 @@ public class Profession {
     private Long id;
 
     @Column(name = "name")
+    @NotEmpty(message = "Имя не должно быть пустым")
     private String name;
 
-    @OneToMany(mappedBy = "profession")
+    @OneToMany(mappedBy = "profession", fetch = FetchType.LAZY)
     private Set<Vacancy> vacancies = new HashSet<>();
 
     public Profession(String name) {
