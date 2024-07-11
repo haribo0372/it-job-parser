@@ -86,6 +86,7 @@ public class UserService implements UserDetailsService {
             if (adminRole == null) {
                 adminRole = new Role();
                 adminRole.setName("ROLE_ADMIN");
+                adminRole.setId(1L);
                 roleRepository.save(adminRole);
             }
 
