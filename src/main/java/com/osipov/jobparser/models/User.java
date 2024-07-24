@@ -33,8 +33,7 @@ public class User implements UserDetails {
     private String passwordConfirm;
 
     @Transient
-    @NotEmpty(message = "Введите роль")
-    private String roleName;
+    private String roleName = "ROLE_USER";
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(

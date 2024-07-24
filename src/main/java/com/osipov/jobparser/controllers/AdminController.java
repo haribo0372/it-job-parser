@@ -49,8 +49,9 @@ public class AdminController {
     @PostMapping("/user/insert")
     public String insertUser(@ModelAttribute("userForm") @Valid User user, BindingResult bindingResult){
         if (bindingResult.hasErrors()) return "admin/user";
-
-        userService.saveUser(user);
+        if (!userService.saveUser(user)) {
+            System.out.println("Не удалось сохранить пользователя");
+        }
         return "redirect:/admin/user";
     }
 
