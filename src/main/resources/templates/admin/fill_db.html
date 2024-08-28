@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/main.css}" rel="stylesheet"/>
+    <link th:href="@{/css/admin.css}" rel="stylesheet"/>
+    <link th:href="@{/css/select.css}" rel="stylesheet"/>
+
+    <title>Fill db</title>
+</head>
+<body>
+<div class="navbar">
+    <a th:href="@{/}" class="nav-button">На главную</a>
+    <a th:href="@{/admin/user}" class="nav-button">Users</a>
+    <a th:href="@{/admin/profession}" class="nav-button">Profession</a>
+    <a th:href="@{/admin/vacancy}" class="nav-button">Vacancy</a>
+</div>
+
+<div class="content">
+
+    <form th:method="POST" th:action="@{/admin/vacancy/fill/db}" th:object="${professionForm}">
+        <div><label for="id">Специальность:</label></div>
+        <select th:field="*{id}" id="id" name="id">
+            <option th:value="${0}">Спарсить по всем специальностям</option>
+            <div th:each="profession: ${professions}">
+                <option th:value="${profession.getId()}" th:text="${profession.getName()}"></option>
+            </div>
+        </select>
+        <br>
+        <button type="submit" id="submit">Parse</button>
+    </form>
+    <br><br>
+    <a th:href="@{/admin/vacancy/delete/all}">
+        <button class="delete-button">Удалить все вакансии</button>
+    </a>
+</div>
+</body>
+</html>

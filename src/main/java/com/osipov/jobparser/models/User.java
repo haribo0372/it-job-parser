@@ -32,6 +32,9 @@ public class User implements UserDetails {
     @NotEmpty(message = "Повторите пароль")
     private String passwordConfirm;
 
+    @Transient
+    private String roleName = "ROLE_USER";
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "user_vacancy",
@@ -49,6 +52,10 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return username;
+    }
+
+    public void removeVacancy(Vacancy vacancy){
+        vacancies.remove(vacancy);
     }
 
     @Override

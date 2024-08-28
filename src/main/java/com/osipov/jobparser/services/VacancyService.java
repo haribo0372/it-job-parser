@@ -82,9 +82,19 @@ public class VacancyService {
         vacancies.forEach(this::save);
     }
 
+    @Transactional
     public void delete(Vacancy vacancy) {
-        if (vacancy.getId() == null) return;
-        vacancyRepository.deleteById(vacancy.getId());
+        Optional<Vacancy> vacancyOptional = vacancyRepository.findById(vacancy.getId());
+        vacancyOptional.ifPresent(i -> {
+            Vacancy currentVacancy = vacancyOptional.get();
+            currentVacancy.getUsers().forEach(user -> user.removeVacancy(vacancy));
+            currentVacancy.getUsers().clear();
+            vacancyRepository.delete(currentVacancy);
+        });
+    }
+
+    public void deleteAll(){
+        vacancyRepository.findAll().forEach(this::delete);
     }
 
     public long count() {

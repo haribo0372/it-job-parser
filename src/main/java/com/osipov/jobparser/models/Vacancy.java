@@ -43,7 +43,7 @@ public class Vacancy {
     )
     private Set<Skill> skills = new HashSet<>();
 
-    @ManyToMany(mappedBy = "vacancies")
+    @ManyToMany(mappedBy = "vacancies", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<User> users = new HashSet<>();
 
     public void addSkill(Skill skill) {

@@ -2,14 +2,20 @@ package com.osipov.jobparser.controllers;
 
 import com.osipov.jobparser.managers.ParseManager;
 import com.osipov.jobparser.models.Profession;
+import com.osipov.jobparser.models.User;
+import com.osipov.jobparser.models.Vacancy;
 import com.osipov.jobparser.repositories.ProfessionRepository;
 import com.osipov.jobparser.services.UserService;
+import com.osipov.jobparser.services.VacancyService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
@@ -17,12 +23,14 @@ public class AdminController {
     private final UserService userService;
     private final ProfessionRepository professionRepository;
     private final ParseManager parseManager;
+    private final VacancyService vacancyService;
 
     @Autowired
-    public AdminController(UserService userService, ProfessionRepository professionRepository, ParseManager parseManager) {
+    public AdminController(UserService userService, ProfessionRepository professionRepository, ParseManager parseManager, VacancyService vacancyService) {
         this.userService = userService;
         this.professionRepository = professionRepository;
         this.parseManager = parseManager;
+        this.vacancyService = vacancyService;
     }
 
     @GetMapping
@@ -34,7 +42,17 @@ public class AdminController {
     @GetMapping("/user")
     public String userPage(Model model) {
         model.addAttribute("allUsers", userService.allUsers());
+        model.addAttribute("userForm", new User());
         return "admin/user";
+    }
+
+    @PostMapping("/user/insert")
+    public String insertUser(@ModelAttribute("userForm") @Valid User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) return "admin/user";
+        if (!userService.saveUser(user)) {
+            System.out.println("Не удалось сохранить пользователя");
+        }
+        return "redirect:/admin/user";
     }
 
     @GetMapping("/user/delete/{id}")
@@ -52,10 +70,12 @@ public class AdminController {
     }
 
     @PostMapping("/profession/insert")
-    public String insertProfession(@ModelAttribute("professionForm") Profession profession) {
-        if (profession.getName() == null || profession.getName().isEmpty())
-            return "redirect:/admin/profession";
-
+    public String insertProfession(@ModelAttribute("professionForm") @Valid Profession profession,
+                                   BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("allProfessions", professionRepository.findAll());
+            return "admin/profession";
+        }
         Optional<Profession> professionOptional = professionRepository.findByName(profession.getName());
         if (professionOptional.isEmpty()) professionRepository.save(profession);
         return "redirect:/admin/profession";
@@ -63,20 +83,56 @@ public class AdminController {
 
     @GetMapping("/profession/delete/{id}")
     public String deleteProf(@PathVariable("id") Long id) {
-        professionRepository.deleteById(id);
-        return "admin/profession";
+        Optional<Profession> professionOptional = professionRepository.findById(id);
+        if (professionOptional.isPresent()) {
+            Profession profession = professionOptional.get();
+            Set<Vacancy> vacancies = profession.getVacancies();
+
+            for (Vacancy vacancy : vacancies) {
+                vacancyService.delete(vacancy);
+            }
+            professionRepository.delete(profession);
+        }
+
+        return "redirect:/admin/profession";
     }
 
     // Vacancy
     @GetMapping("/vacancy")
     public String vacancyPage(Model model) {
+        model.addAttribute("vacancies", vacancyService.getVacancies());
         return "admin/vacancy";
     }
 
-    @GetMapping("/vacancy/fill/db")
-    public String fillDBWithVacancies(){
-        parseManager.fillVacancy();
+    @GetMapping("/vacancy/delete/{id}")
+    public String deleteVacancy(@PathVariable("id") Long id) {
+        Optional<Vacancy> vacancyOptional = vacancyService.findById(id);
+        vacancyOptional.ifPresent(i -> vacancyService.delete(vacancyOptional.get()));
+
         return "redirect:/admin/vacancy";
     }
 
+    @GetMapping("/vacancy/delete/all")
+    public String deleteAllVacancies() {
+        vacancyService.deleteAll();
+        return "redirect:/admin/vacancy";
+    }
+
+    @GetMapping("/vacancy/fill/db")
+    public String getFormForFillDb(Model model) {
+        model.addAttribute("professions", professionRepository.findAll());
+        model.addAttribute("professionForm", new Profession());
+        return "admin/fill_db";
+    }
+
+    @PostMapping("/vacancy/fill/db")
+    public String postFillDb(@ModelAttribute("professionForm") Profession profession, Model model) {
+        if (profession.getId() == 0) parseManager.fillVacancy();
+        else {
+            Optional<Profession> professionOptional = professionRepository.findById(profession.getId());
+            professionOptional.ifPresent(parseManager::fillVacancy);
+        }
+        model.addAttribute("professions", professionRepository.findAll());
+        return "admin/fill_db";
+    }
 }

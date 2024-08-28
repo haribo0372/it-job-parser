@@ -5,45 +5,56 @@
     <link th:href="@{/css/main.css}" rel="stylesheet"/>
     <link th:href="@{/css/admin.css}" rel="stylesheet"/>
 
+
     <title>Professions</title>
 </head>
 <body>
+<script th:src="@{/js/admin/inputSearch.js}"></script>
+
 <div class="navbar">
+    <a th:href="@{/}" class="nav-button">На главную</a>
+    <a th:href="@{/admin/vacancy/fill/db}">Спарсить вакансии</a>
     <a th:href="@{/admin/user}" class="nav-button">Users</a>
     <a th:href="@{/admin/vacancy}" class="nav-button">Vacancy</a>
 </div>
 <div class="content">
-    <table>
+    <label for="searchInput">Поиск</label>
+    <input type="text" id="searchInput" onkeyup="filterProfessions()" placeholder="profession.name">
+    <table id="table">
         <caption>
-            All professions
+            <div class="container">
+                <form th:method="POST" th:action="@{profession/insert}" th:object="${professionForm}">
+                    <div class="form-group">
+                        <p class="error-text" th:each="error : ${#fields.errors('name')}"
+                           th:text="${'*' + error}">Validation error</p><br>
+                        <label for="nameProf"><a>Специализация :</a></label>
+                        <input class="reg-input" id="nameProf" th:field="*{name}">
+                    </div>
+                    <button type="submit">INSERT</button>
+                </form>
+            </div>
         </caption>
         <thead>
         <tr>
-            <th scope="col">Id</th>
-            <th scope="col">professionName</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
-        <div th:each="profession: ${allProfessions}">
-            <tr>
-                <th scope="row" th:text="${profession.getId()}"></th>
-                <td><a th:text="${profession.getName()}"></a></td>
-                <td>
-                    <a th:href="@{/admin/profession/delete/{id}(id=${profession.getId()})}">
-                        <button>DELETE</button>
-                    </a>
-                </td>
-            </tr>
-        </div>
+            <div th:each="profession: ${allProfessions}">
+                <tr>
+                    <th scope="row" th:text="${profession.getId()}"></th>
+                    <td><a th:text="${profession.getName()}"></a></td>
+                    <td>
+                        <a th:href="@{/admin/profession/delete/{id}(id=${profession.getId()})}">
+                            <button>DELETE</button>
+                        </a>
+                    </td>
+                </tr>
+            </div>
         </tbody>
     </table>
-    <div class="container">
-        <form th:method="POST" th:action="@{profession/insert}" th:object="${professionForm}">
-            <label for="nameProf">Специализация :</label>
-            <input id="nameProf" th:field="*{name}">
-            <button type="submit">Добавить</button>
-        </form>
-    </div>
     <a th:href="@{/}">Back to main page</a>
 </div>
 </body>

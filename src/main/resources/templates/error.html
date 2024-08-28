@@ -5,11 +5,18 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link th:href="@{/css/main.css}" rel="stylesheet"/>
     <title>Error</title>
 </head>
 <body>
-<a th:text="${exception}"></a><br>
-<a th:text="${url}"></a><br>
-<a th:href="@{/}">Back to main page</a>
+<div class="navbar">
+    <a th:href="@{/}" class="nav-button">GoJob</a>
+    <a th:href="@{/search}" class="nav-button">Найти работу</a>
+    <a th:href="@{/login}" class="nav-button">Войти</a>
+</div>
+<div class="content">
+    <a th:text="${exception}"></a><br><br>
+    <a th:text="${url}"></a><br>
+</div>
 </body>
 </html>

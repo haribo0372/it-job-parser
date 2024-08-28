@@ -2,19 +2,65 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <link th:href="@{/css/main.css}" rel="stylesheet" />
-    <title>Users</title>
+    <link th:href="@{/css/main.css}" rel="stylesheet"/>
+    <link th:href="@{/css/admin.css}" rel="stylesheet"/>
+    <title>Vacancies</title>
 </head>
 <body>
+<script th:src="@{/js/admin/vacancySearch.js}"></script>
 <div class="navbar">
+    <a th:href="@{/}" class="nav-button">На главную</a>
+    <a th:href="@{/admin/vacancy/fill/db}">Спарсить вакансии</a>
     <a th:href="@{/admin/user}" class="nav-button">Users</a>
     <a th:href="@{/admin/profession}" class="nav-button">Profession</a>
 </div>
 
 <div class="content">
-    <a th:href="@{/admin/vacancy/fill/db}" style="text-decoration: none;">
-        <button>Спарсить свежие вакансии</button>
-    </a><br><br>
+    <table id="table">
+        <caption>
+            <p>Vacancies</p>
+        </caption>
+        <thead>
+        <tr>
+            <th>ID<br><input type="text" id="searchId" onkeyup="filterID()" placeholder="vacancy.id"></th>
+            <th>City<br><input type="text" id="searchCity" onkeyup="filterCity()" placeholder="vacancy.city"></th>
+            <th>Company<br><input type="text" id="searchCompany" onkeyup="filterCompany()"
+                                  placeholder="vacancy.company"></th>
+            <th>Wage<br><input type="text" id="searchWage" onkeyup="filterWage()" placeholder="vacancy.wage"></th>
+            <th>Profession<br><input type="text" id="searchProfession" onkeyup="filterProfessions()"
+                                     placeholder="vacancy.profession"></th>
+            <th>Title<br><input type="text" id="searchTitle" onkeyup="filterTitle()" placeholder="vacancy.title"></th>
+            <th>Url<br></th>
+            <th>Skills<br><input type="text" id="searchSkill" onkeyup="filterSkill()" placeholder="vacancy.skill"></td>
+            </th>
+            <th>Actions<br></th>
+        </tr>
+        </thead>
+        <tbody>
+        <div th:each="vacancy: ${vacancies}">
+            <tr>
+                <th id="id" scope="row" th:text="${vacancy.getId()}"></th>
+                <td id="city"><a th:text="${vacancy.getCity().getName()}"></a></td>
+                <td id="company"><a th:text="${vacancy.getCompany()}"></a></td>
+                <td id="wage"><a th:text="${vacancy.getWage()}"></a></td>
+                <td id="profession"><a th:text="${vacancy.getProfession().getName()}"></a></td>
+                <td id="title"><a th:text="${vacancy.getTitle()}"></a></td>
+                <td id="url"><a th:href=${vacancy.getUrl()}>Click</a></td>
+                <td id="skill">
+                    <div th:each="skill : ${vacancy.getSkills()}">
+                        <a th:text="${skill.getName() + ', '}"></a>
+                    </div>
+                </td>
+                <td>
+                    <a th:href="@{/admin/vacancy/delete/{id}(id=${vacancy.getId()})}">
+                        <button>DELETE</button>
+                    </a>
+                </td>
+            </tr>
+        </div>
+        </tbody>
+    </table>
+
     <a th:href="@{/}">Back to main page</a>
 </div>
 </body>

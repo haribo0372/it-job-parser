@@ -60,7 +60,7 @@ public class UserService implements UserDetailsService {
             return false;
         }
 
-        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
+        user.setRoles(Collections.singleton(roleRepository.findByName(user.getRoleName())));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return true;
@@ -75,20 +75,14 @@ public class UserService implements UserDetailsService {
         userOptional.ifPresent(userRepository::delete);
     }
 
-    public void createAdminUser(String username, String password) {
+   public void createAdminUser(String username, String password) {
         if (userRepository.findByUsername(username) == null) {
             User user = new User();
             user.setUsername(username);
             user.setPassword(passwordEncoder.encode(password));
             user.setPasswordConfirm(passwordEncoder.encode(password));
-
+            user.setRoleName("ROLE_ADMIN");
             Role adminRole = roleRepository.findByName("ROLE_ADMIN");
-            if (adminRole == null) {
-                adminRole = new Role();
-                adminRole.setName("ROLE_ADMIN");
-                adminRole.setId(1L);
-                roleRepository.save(adminRole);
-            }
 
             user.setRoles(Collections.singleton(adminRole));
             userRepository.save(user);

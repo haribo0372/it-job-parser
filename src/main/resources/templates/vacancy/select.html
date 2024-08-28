@@ -8,45 +8,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-<script>
-    function addToFavorites(button) {
-        var vacancyId = button.getAttribute("data-vacancy-id");
-        let url = `/favorite/add/${vacancyId}`;
-        console.log(url);
-        $.ajax({
-            url: url,
-            type: "GET",
-            data: { vacancyId: vacancyId },
-            success: function(response) {
-                console.log("Вакансия добавлена в избранное {" + vacancyId + "}");
-                $(button).removeClass('add-to-favorites').addClass('remove-from-favorites').text('Удалить из избранного');
-                $(button).attr('onclick', 'removeFromFavorites(this)');
-            },
-            error: function(xhr, status, error) {
-                console.error("Ошибка при добавлении в избранное: " + error);
-            }
-        });
-    }
-
-    function removeFromFavorites(button) {
-        var vacancyId = button.getAttribute("data-vacancy-id");
-        let url = `/favorite/remove/${vacancyId}`;
-        console.log(url);
-        $.ajax({
-            url: url,
-            type: "GET",
-            data: { vacancyId: vacancyId },
-            success: function(response) {
-                console.log("Вакансия удалена из избранного {" + vacancyId + "}");
-                $(button).removeClass('remove-from-favorites').addClass('add-to-favorites').text('Добавить в избранное');
-                $(button).attr('onclick', 'addToFavorites(this)');
-            },
-            error: function(xhr, status, error) {
-                console.error("Ошибка при удалении из избранного: " + error);
-            }
-        });
-    }
-</script>
 <script th:src="@{/js/select.js}"></script>
 
 <div class="navbar">
@@ -73,6 +34,8 @@
             </div>
         </select>
         <div><label for="selectSkill">Навыки:</label></div>
+        <label for="skillSearch"></label>
+        <input type="text" id="skillSearch" oninput="searchSkills()" placeholder="Можете ввести название навыка">
         <select th:field="*{skills}" id="selectSkill" name="selectSkill" multiple size="20">
             <option th:each="skill : ${skills}"
                     th:value="${skill.getId()}"

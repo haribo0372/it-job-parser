@@ -44,6 +44,16 @@ public class ParseManager {
         }
     }
 
+    public void fillVacancy(Profession profession){
+        try {
+            this.vacancyService.save(hhParser.parse(profession));
+            this.vacancyService.save(habrCareerParser.parse(profession));
+        } catch (IOException ignored) {
+        } catch (NonUniqueResultException | IncorrectResultSizeDataAccessException uniqueResultException) {
+            System.out.println(uniqueResultException.getMessage());
+        }
+    }
+
     @Scheduled(fixedRate = 10800000)
     public void checkLinkValidity() {
         for (Vacancy vacancy : vacancyService.getVacancies()) {
