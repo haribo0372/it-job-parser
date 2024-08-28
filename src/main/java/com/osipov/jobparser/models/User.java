@@ -54,6 +54,10 @@ public class User implements UserDetails {
         return username;
     }
 
+    public void removeVacancy(Vacancy vacancy){
+        vacancies.remove(vacancy);
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

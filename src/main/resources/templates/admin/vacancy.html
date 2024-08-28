@@ -2,21 +2,20 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <link th:href="@{/css/main.css}" rel="stylesheet" />
-    <link th:href="@{/css/admin.css}" rel="stylesheet" />
+    <link th:href="@{/css/main.css}" rel="stylesheet"/>
+    <link th:href="@{/css/admin.css}" rel="stylesheet"/>
     <title>Vacancies</title>
 </head>
 <body>
 <script th:src="@{/js/admin/vacancySearch.js}"></script>
 <div class="navbar">
+    <a th:href="@{/}" class="nav-button">На главную</a>
+    <a th:href="@{/admin/vacancy/fill/db}">Спарсить вакансии</a>
     <a th:href="@{/admin/user}" class="nav-button">Users</a>
     <a th:href="@{/admin/profession}" class="nav-button">Profession</a>
 </div>
 
 <div class="content">
-    <a th:href="@{/admin/vacancy/fill/db}" style="text-decoration: none;">
-        <button>Спарсить свежие вакансии</button>
-    </a><br><br>
     <table id="table">
         <caption>
             <p>Vacancies</p>
@@ -25,12 +24,15 @@
         <tr>
             <th>ID<br><input type="text" id="searchId" onkeyup="filterID()" placeholder="vacancy.id"></th>
             <th>City<br><input type="text" id="searchCity" onkeyup="filterCity()" placeholder="vacancy.city"></th>
-            <th>Company<br><input type="text" id="searchCompany" onkeyup="filterCompany()" placeholder="vacancy.company"></th>
+            <th>Company<br><input type="text" id="searchCompany" onkeyup="filterCompany()"
+                                  placeholder="vacancy.company"></th>
             <th>Wage<br><input type="text" id="searchWage" onkeyup="filterWage()" placeholder="vacancy.wage"></th>
-            <th>Profession<br><input type="text" id="searchProfession" onkeyup="filterProfessions()" placeholder="vacancy.profession"></th>
+            <th>Profession<br><input type="text" id="searchProfession" onkeyup="filterProfessions()"
+                                     placeholder="vacancy.profession"></th>
             <th>Title<br><input type="text" id="searchTitle" onkeyup="filterTitle()" placeholder="vacancy.title"></th>
             <th>Url<br></th>
-            <th>Skills<br><input type="text" id="searchSkill" onkeyup="filterSkill()" placeholder="vacancy.skill"></td></th>
+            <th>Skills<br><input type="text" id="searchSkill" onkeyup="filterSkill()" placeholder="vacancy.skill"></td>
+            </th>
             <th>Actions<br></th>
         </tr>
         </thead>
@@ -50,7 +52,7 @@
                     </div>
                 </td>
                 <td>
-                    <a th:href="@{/admin/profession/delete/{id}(id=${vacancy.getId()})}">
+                    <a th:href="@{/admin/vacancy/delete/{id}(id=${vacancy.getId()})}">
                         <button>DELETE</button>
                     </a>
                 </td>

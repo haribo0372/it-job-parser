@@ -47,7 +47,7 @@ public class AdminController {
     }
 
     @PostMapping("/user/insert")
-    public String insertUser(@ModelAttribute("userForm") @Valid User user, BindingResult bindingResult){
+    public String insertUser(@ModelAttribute("userForm") @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return "admin/user";
         if (!userService.saveUser(user)) {
             System.out.println("Не удалось сохранить пользователя");
@@ -84,11 +84,11 @@ public class AdminController {
     @GetMapping("/profession/delete/{id}")
     public String deleteProf(@PathVariable("id") Long id) {
         Optional<Profession> professionOptional = professionRepository.findById(id);
-        if (professionOptional.isPresent()){
+        if (professionOptional.isPresent()) {
             Profession profession = professionOptional.get();
             Set<Vacancy> vacancies = profession.getVacancies();
 
-            for (Vacancy vacancy : vacancies){
+            for (Vacancy vacancy : vacancies) {
                 vacancyService.delete(vacancy);
             }
             professionRepository.delete(profession);
@@ -104,10 +104,35 @@ public class AdminController {
         return "admin/vacancy";
     }
 
-    @GetMapping("/vacancy/fill/db")
-    public String fillDBWithVacancies(){
-        parseManager.fillVacancy();
+    @GetMapping("/vacancy/delete/{id}")
+    public String deleteVacancy(@PathVariable("id") Long id) {
+        Optional<Vacancy> vacancyOptional = vacancyService.findById(id);
+        vacancyOptional.ifPresent(i -> vacancyService.delete(vacancyOptional.get()));
+
         return "redirect:/admin/vacancy";
     }
 
+    @GetMapping("/vacancy/delete/all")
+    public String deleteAllVacancies() {
+        vacancyService.deleteAll();
+        return "redirect:/admin/vacancy";
+    }
+
+    @GetMapping("/vacancy/fill/db")
+    public String getFormForFillDb(Model model) {
+        model.addAttribute("professions", professionRepository.findAll());
+        model.addAttribute("professionForm", new Profession());
+        return "admin/fill_db";
+    }
+
+    @PostMapping("/vacancy/fill/db")
+    public String postFillDb(@ModelAttribute("professionForm") Profession profession, Model model) {
+        if (profession.getId() == 0) parseManager.fillVacancy();
+        else {
+            Optional<Profession> professionOptional = professionRepository.findById(profession.getId());
+            professionOptional.ifPresent(parseManager::fillVacancy);
+        }
+        model.addAttribute("professions", professionRepository.findAll());
+        return "admin/fill_db";
+    }
 }
