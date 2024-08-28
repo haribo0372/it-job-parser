@@ -26,12 +26,12 @@
                 <option th:value="${profession.getId()}" th:text="${profession.getName()}"></option>
             </div>
         </select>
-        <br>
+        <br><br><br>
         <button type="submit" id="submit">Parse</button>
     </form>
     <br><br>
     <a th:href="@{/admin/vacancy/delete/all}">
-        <button class="delete-button">Удалить все вакансии</button>
+        <button style="display: block; margin: 0 auto;">Удалить все вакансии</button>
     </a>
 </div>
 </body>
