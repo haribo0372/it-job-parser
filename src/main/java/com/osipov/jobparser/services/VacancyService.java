@@ -64,14 +64,14 @@ public class VacancyService {
         cityOptional.ifPresent(vacancy::setCity);
 
         Set<Skill> managedSkills = new HashSet<>();
-        for (Skill vacancySkill : vacancy.getSkills()) {
+        vacancy.getSkills().forEach(vacancySkill -> {
             Optional<Skill> existingSkill = skillRepository.findByName(vacancySkill.getName());
             if (existingSkill.isPresent()) {
                 managedSkills.add(existingSkill.get());
             } else {
                 managedSkills.add(vacancySkill);
             }
-        }
+        });
 
         vacancy.setSkills(managedSkills);
         vacancyRepository.save(vacancy);
@@ -93,7 +93,7 @@ public class VacancyService {
         });
     }
 
-    public void deleteAll(){
+    public void deleteAll() {
         vacancyRepository.findAll().forEach(this::delete);
     }
 
@@ -123,9 +123,9 @@ public class VacancyService {
         Set<Skill> currentSkills = vacancy.getSkills();
         if (currentSkills != null && !currentSkills.isEmpty()) {
             List<Predicate> skillPredicates = new ArrayList<>();
-            for (Skill skill : currentSkills) {
+            currentSkills.forEach(skill -> {
                 skillPredicates.add(cb.isMember(skill, root.get("skills")));
-            }
+            });
             predicates.add(cb.and(skillPredicates.toArray(new Predicate[0])));
         }
 

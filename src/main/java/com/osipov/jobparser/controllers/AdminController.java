@@ -88,9 +88,7 @@ public class AdminController {
             Profession profession = professionOptional.get();
             Set<Vacancy> vacancies = profession.getVacancies();
 
-            for (Vacancy vacancy : vacancies) {
-                vacancyService.delete(vacancy);
-            }
+            vacancies.forEach(vacancyService::delete);
             professionRepository.delete(profession);
         }
 

@@ -32,8 +32,7 @@ public class ParseManager {
     }
 
     public void fillVacancy() {
-        List<Profession> allProfession = this.professionRepository.findAll();
-        for (Profession profession : allProfession) {
+        this.professionRepository.findAll().forEach(profession -> {
             try {
                 this.vacancyService.save(hhParser.parse(profession));
                 this.vacancyService.save(habrCareerParser.parse(profession));
@@ -41,7 +40,7 @@ public class ParseManager {
             } catch (NonUniqueResultException | IncorrectResultSizeDataAccessException uniqueResultException) {
                 System.out.println(uniqueResultException.getMessage());
             }
-        }
+        });
     }
 
     public void fillVacancy(Profession profession){
@@ -56,7 +55,7 @@ public class ParseManager {
 
     @Scheduled(fixedRate = 10800000)
     public void checkLinkValidity() {
-        for (Vacancy vacancy : vacancyService.getVacancies()) {
+        vacancyService.getVacancies().forEach(vacancy -> {
             try {
                 Document doc = habrCareerParser.getHtmlCode(vacancy.getUrl());
 
@@ -67,7 +66,7 @@ public class ParseManager {
             } catch (IOException e) {
                 vacancyService.delete(vacancy);
             }
-        }
+        });
 
         if (vacancyService.count() < 300) fillVacancy();
     }

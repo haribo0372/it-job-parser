@@ -36,7 +36,7 @@ public class AccountController {
     @GetMapping("/remove/{vacancyId}")
     public String removeFromFavorite(@AuthenticationPrincipal User currentUser,
                                      @PathVariable("vacancyId") Long vacancyId, RedirectAttributes redirectAttributes) {
-        boolean added = userService.removeFavoriteVacancyFromUser(currentUser, vacancyId);
+        userService.removeFavoriteVacancyFromUser(currentUser, vacancyId);
 
         return "redirect:/account";
     }

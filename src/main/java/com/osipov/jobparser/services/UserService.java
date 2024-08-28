@@ -75,7 +75,7 @@ public class UserService implements UserDetailsService {
         userOptional.ifPresent(userRepository::delete);
     }
 
-   public void createAdminUser(String username, String password) {
+    public void createAdminUser(String username, String password) {
         if (userRepository.findByUsername(username) == null) {
             User user = new User();
             user.setUsername(username);
