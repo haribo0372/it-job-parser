@@ -21,15 +21,16 @@ import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final VacancyService vacancyService;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private VacancyService vacancyService;
-
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, VacancyService vacancyService) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.vacancyService = vacancyService;
+    }
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 

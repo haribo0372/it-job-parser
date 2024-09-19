@@ -12,8 +12,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RestController
 @RequestMapping("/favorite")
 public class FavoriteController {
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public FavoriteController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/add/{vacancyId}")
     public ResponseEntity<String> addToFavorites(@AuthenticationPrincipal User currentUser,

@@ -19,11 +19,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/account")
 public class AccountController {
-    @Autowired
     private UserService userService;
+    private VacancyService vacancyService;
 
     @Autowired
-    private VacancyService vacancyService;
+    public AccountController(UserService userService, VacancyService vacancyService) {
+        this.userService = userService;
+        this.vacancyService = vacancyService;
+    }
 
     @GetMapping
     public String viewAccount(@AuthenticationPrincipal User currentUser, Model model) {

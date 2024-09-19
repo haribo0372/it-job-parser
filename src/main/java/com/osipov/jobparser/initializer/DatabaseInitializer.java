@@ -11,12 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class DatabaseInitializer implements CommandLineRunner {
+    private final ProfessionRepository professionRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    private ProfessionRepository professionRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
+    public DatabaseInitializer(ProfessionRepository professionRepository, RoleRepository roleRepository) {
+        this.professionRepository = professionRepository;
+        this.roleRepository = roleRepository;
+    }
 
     @Override
     @Transactional
